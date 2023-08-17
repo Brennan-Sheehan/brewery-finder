@@ -1,19 +1,18 @@
 <template>
   <div>
-      <ApiSearch/>
+    <ApiSearch />
   </div>
 </template>
 
 <script>
-import ApiSearch from "../components/ApiSearch.vue"
+import ApiSearch from "../components/ApiSearch.vue";
 
 export default {
+  name: "ApiSearchView",
   components: {
-    ApiSearch
-  }
-}
+    ApiSearch,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

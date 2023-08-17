@@ -6,7 +6,7 @@
           <div class="modal-header">
             <h1 class="title logoutbtn">Log Out</h1>
           </div>
- 
+
           <div class="modal-footer">
             <input
               id="cancel"
@@ -29,14 +29,13 @@
 
 <script>
 export default {
+  name: "LogoutView",
   methods: {
     logout() {
-      this.$store.commit("LOGOUT")
-      this.$emit('close')
-     
-      
-    }
-  }
+      this.$store.commit("LOGOUT");
+      this.$emit("close");
+    },
+  },
 };
 </script>
 
@@ -75,7 +74,6 @@ export default {
   box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
   transition: all 0.3s ease;
   z-index: 20;
-
 }
 h1 {
   color: #363949;
@@ -84,7 +82,6 @@ h1 {
   font-size: 16px;
   line-height: 23px;
 }
-
 
 .fade-enter-active,
 .fade-leave-active {
@@ -154,6 +151,5 @@ h1 {
   background-color: fff;
   border: 1px solid rgba(25, 4, 69, 0.2);
   width: 68px;
-
 }
 </style>

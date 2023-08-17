@@ -5,26 +5,23 @@
     :style="{ backgroundColor: navBarColor }"
     :class="{ onScroll: !view.topOfPage }"
   >
-    <dir>
+    <div>
       <img src="../assets/beerBuddiesLogo.png" alt="" />
       <a class="site-identity-logo">Beer Buddy</a>
-    </dir>
+    </div>
 
     <input type="checkbox" id="toggleMenu" @click="toggleMenu" />
     <label for="toggleMenu"><i class="ri-menu-line" id="toggleIcon"></i></label>
     <section class="main-menu">
       <ul class="navigation-menu__labels">
         <li>
-          <router-link
-            @click.native="resetToggle()"
-            v-bind:to="{ name: 'home' }"
-          >
+          <router-link @click="resetToggle()" v-bind:to="{ name: 'home' }">
             Home
           </router-link>
         </li>
         <li>
           <router-link
-            @click.native="resetToggle()"
+            @click="resetToggle()"
             v-bind:to="{ name: 'external-search' }"
           >
             More Breweries
@@ -40,7 +37,7 @@
         </li>
         <li v-if="isLoggedInAsBrewer">
           <router-link
-            @click.native="resetToggle()"
+            @click="resetToggle()"
             :to="{
               name: 'brewer',
               params: { brewerId: this.$store.state.user.id },
@@ -50,7 +47,7 @@
         </li>
         <li v-if="isLoggedIn">
           <router-link
-            @click.native="resetToggle()"
+            @click="resetToggle()"
             :to="{
               name: 'userPage',
               params: { userId: this.$store.state.user.id },
@@ -60,7 +57,7 @@
         </li>
         <li v-if="isLoggedInAsManager">
           <router-link
-            @click.native="resetToggle()"
+            @click="resetToggle()"
             :to="{
               name: 'manager-view',
             }"
@@ -107,11 +104,11 @@
 </template>
 
 <script>
-import loginModal from "../views/Login.vue";
-import registerModal from "../views/Register.vue";
-import logoutModal from "../views/Logout.vue";
+import loginModal from "../views/LoginView.vue";
+import registerModal from "../views/RegisterView.vue";
+import logoutModal from "../views/LogoutView.vue";
 export default {
-  name: "navigation",
+  name: "NavigationComponent",
   data() {
     return {
       checkbox: false,
@@ -154,7 +151,7 @@ export default {
         return "#353631";
       } else if (this.$route.path.match("/userpage")) {
         return "#353631";
-      }else {
+      } else {
         return "";
       }
     },

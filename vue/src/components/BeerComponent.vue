@@ -1,7 +1,7 @@
 <template>
   <div>
     <main>
-       <div class="loading" v-if="isLoading">
+      <div class="loading" v-if="isLoading">
         <img src="../assets/beer_loader.gif" />
       </div>
       <section class="top-section">
@@ -15,31 +15,39 @@
           <div class="beer-type">
             {{ beer.beerType }}
           </div>
-          <div>
-            {{ beer.abv }}% ABV
-          </div> 
-        
+          <div>{{ beer.abv }}% ABV</div>
         </div>
-        
+
         <div class="review-button">
-     <button v-show="false" v-on:click.prevent="showForm = false" v-if="showForm">Write a Review</button>
-      <button v-on:click.prevent="showForm = true" v-else>Write a Review</button>
-      <beer-review-form v-show="showForm" v-bind:beerId="this.beer.beerId"/>
-       </div>
+          <button
+            v-show="false"
+            v-on:click.prevent="showForm = false"
+            v-if="showForm"
+          >
+            Write a Review
+          </button>
+          <button v-on:click.prevent="showForm = true" v-else>
+            Write a Review
+          </button>
+          <beer-review-form
+            v-show="showForm"
+            v-bind:beerId="this.beer.beerId"
+          />
+        </div>
       </section>
       <section class="bottom-section">
         <div>
-            <h3>Tasting Notes</h3>
-            {{ beer.tastingNotes }}
+          <h3>Tasting Notes</h3>
+          {{ beer.tastingNotes }}
         </div>
         <!-- {{beer.averageRating}} -->
         <div>
-            <h3>Descripion</h3>
-            {{ beer.description }}
+          <h3>Descripion</h3>
+          {{ beer.description }}
         </div>
-         <div>
-            <h3>Reviews</h3>
-            <beer-review-list v-bind:beer="beer"/>
+        <div>
+          <h3>Reviews</h3>
+          <beer-review-list v-bind:beer="beer" />
         </div>
       </section>
     </main>
@@ -48,22 +56,21 @@
 
 <script>
 import beerService from "../services/BeerService";
-import BeerReviewList from './BeerReviewList.vue';
-import beerReviewForm from './BeerReviewForm.vue';
-
+import BeerReviewList from "./BeerReviewList.vue";
+import beerReviewForm from "./BeerReviewForm.vue";
 
 export default {
+  name: "BeerComponent",
   components: { BeerReviewList, beerReviewForm },
   data() {
     return {
       isLoading: true,
       beer: this.$store.state.beer,
       showForm: false,
-       aboutName:''   
-
+      aboutName: "",
     };
   },
-      mounted() {
+  mounted() {
     setTimeout(() => {
       this.isLoading = false;
     }, 2000);
@@ -72,7 +79,6 @@ export default {
     beerGetter() {
       return this.$store.state.beer;
     },
-
   },
   watch: {
     beerGetter: {
@@ -95,12 +101,9 @@ export default {
           }
         });
     },
-  
   },
   created() {
     this.getBeer();
-
-   
   },
 };
 </script>
@@ -115,14 +118,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; 
-   background-color: rgba(15, 65, 58, 0.87);
+  z-index: 9999;
+  background-color: rgba(15, 65, 58, 0.87);
 }
 
 main {
-    margin: 0 auto;
-    padding-top: 200px;
-    max-width: 900px;
+  margin: 0 auto;
+  padding-top: 200px;
+  max-width: 900px;
 }
 
 .image-wrapper {
@@ -140,7 +143,6 @@ img {
   height: auto;
 }
 
-
 section {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -149,10 +151,9 @@ section {
   margin-bottom: 20px;
 }
 
-.top-section{
-    display: flex;
+.top-section {
+  display: flex;
 }
-
 
 h1 {
   font-size: 24px;
@@ -163,34 +164,31 @@ div {
   margin-bottom: 10px;
 }
 
-
 .bottom-section {
   font-size: 16px;
-  background-color: #F8F9FA;
+  background-color: #f8f9fa;
 }
-
 
 .beer-type {
   color: #666;
 }
 
 .content {
-    display: flex;
-    flex-direction: column;
-    padding: 40px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  position: relative;
 }
 .content > div:nth-child(3) {
   font-weight: bold;
 }
 
-.review-button{
-   margin-top: auto;
-   margin-left: auto;
- 
+.review-button {
+  margin-top: auto;
+  margin-left: auto;
 }
 
-.review-button button{
+.review-button button {
   text-align: right;
   margin: 0;
   font-size: 15px;
@@ -199,23 +197,20 @@ div {
   padding: 18px 40px;
   border-radius: 4px;
 }
-@media screen and (max-width: 480px) { 
+@media screen and (max-width: 480px) {
   .top-section {
     flex-direction: column;
   }
- 
 }
-
 
 @media (max-width: 768px) {
   .image-wrapper {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .image-container {
     max-width: 100%;
   }
 }
-
 </style>

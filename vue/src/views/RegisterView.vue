@@ -70,7 +70,7 @@
 import authService from "../services/AuthService";
 
 export default {
-  name: "register",
+  name: "RegisterView",
   data() {
     return {
       user: {
@@ -190,7 +190,7 @@ p {
   flex-shrink: 0;
   border-bottom: 1px solid rgba(25, 4, 69, 0.1);
 }
-.modal-body{
+.modal-body {
   max-height: 600px;
 }
 .modal-footer {
@@ -228,4 +228,3 @@ button,
   width: 68px;
 }
 </style>
-

@@ -1,18 +1,16 @@
 <template>
   <div>
-      
-      <review v-for="review in reviewGetter" :key="review.id" :review="review"/>
-     
+    <review v-for="review in reviewGetter" :key="review.id" :review="review" />
   </div>
 </template>
 
 <script>
 import reviewService from "../services/ReviewService.js";
-import Review from "../components/Review"
+import Review from "../components/ReviewComponent";
 export default {
   props: ["brewery"],
   components: {
-    Review
+    Review,
   },
   data() {
     return {
@@ -47,11 +45,9 @@ export default {
     },
   },
   created() {
-      this.getBreweryReviews();
-  }
+    this.getBreweryReviews();
+  },
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

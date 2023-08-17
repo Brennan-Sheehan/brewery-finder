@@ -1,16 +1,14 @@
 <template>
   <div>
-      <Beer/>
+    <Beer />
   </div>
 </template>
 
 <script>
-import Beer from '../components/Beer.vue'
+import Beer from "../components/BeerComponent.vue";
 export default {
-components: {Beer}
-}
+  components: { Beer },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

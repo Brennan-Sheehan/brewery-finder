@@ -99,13 +99,21 @@
               </BeerCard>
             </ul>
             <div id="delete" class="beer-list" v-else>
-              <form class="delete-form" @submit="deleteBeerByBrewery({breweryId: brewery.breweryId, beerId: getBeerId(selectedCard)})">
+              <form
+                class="delete-form"
+                @submit="
+                  deleteBeerByBrewery({
+                    breweryId: brewery.breweryId,
+                    beerId: getBeerId(selectedCard),
+                  })
+                "
+              >
                 <select name="beer-card-select" v-model="selectedCard">
-                <option v-for="card in beers" :key="card.beerId">
-                  {{ card.beerName }}
-                </option>
-              </select>
-              <button class="delete-button" type="submit">Delete</button>
+                  <option v-for="card in beers" :key="card.beerId">
+                    {{ card.beerName }}
+                  </option>
+                </select>
+                <button class="delete-button" type="submit">Delete</button>
               </form>
             </div>
           </div>
@@ -122,7 +130,7 @@ import BeerCard from "../components/BeerCard.vue";
 import { mapActions } from "vuex";
 
 export default {
-  name: "Brewery-Profile",
+  name: "BrewerComponent",
 
   data() {
     return {
@@ -147,7 +155,6 @@ export default {
       showModal: false,
       selectedCard: "",
       option: this.$store.state.beers,
-      
     };
   },
   components: {
@@ -162,9 +169,9 @@ export default {
   methods: {
     ...mapActions(["getBeersByBrewery", "deleteBeerByBrewery"]),
     getBeerId(name) {
-      const beer = this.$store.state.beers.find(d => d.beerName === name)
-      console.log(this.$store.state.beers.find(d => d.beerName === name))
-      return beer.beerId
+      const beer = this.$store.state.beers.find((d) => d.beerName === name);
+      console.log(this.$store.state.beers.find((d) => d.beerName === name));
+      return beer.beerId;
     },
     saveChanges() {
       //API call to save the brewery to the database. Should probably do a put?
@@ -234,7 +241,7 @@ export default {
 .brewery-profile {
   display: flex;
   justify-content: center;
-  padding-top:100px;
+  padding-top: 100px;
   background-color: #f1f1f1;
 }
 .title {
@@ -374,7 +381,7 @@ input {
   margin: 0.1em 0.2em;
   background: #f14f29;
 }
-.delete-form{
+.delete-form {
   display: flex;
   gap: 10px;
   align-items: center;

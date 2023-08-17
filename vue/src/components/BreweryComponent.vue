@@ -101,7 +101,7 @@ import BreweryReview from "../components/BreweryReviewList.vue";
 import WebDisplay from "./WebDisplay.vue";
 
 export default {
-  name: "brewery",
+  name: "BreweryComponent",
   props: ["card"],
   data() {
     return {
@@ -191,9 +191,9 @@ export default {
       let city = stringArray[1];
       this.CITY = city.replaceAll(" ", "-");
 
-  //     let stateZip = stringArray[2];
-  //     this.STATE = stateZip.split(" ")[0];
-  //     this.ZIPCODE = stateZip.split(" ")[1];
+      //     let stateZip = stringArray[2];
+      //     this.STATE = stateZip.split(" ")[0];
+      //     this.ZIPCODE = stateZip.split(" ")[1];
 
       this.url = `https://www.mapquest.com/us/${this.STATE}/${this.CITY}/${this.ZIPCODE}/${this.ADDRESS}`;
 
@@ -203,10 +203,10 @@ export default {
   created() {
     this.getBrewery();
     this.getBeers();
-         this.$store.state.userLiked = [];
-             beerService.getLikedBeers(this.$store.state.user).then((response) => {
+    this.$store.state.userLiked = [];
+    beerService.getLikedBeers(this.$store.state.user).then((response) => {
       response.data.forEach((element) => {
-      //  this.$store.state.userLiked = [];
+        //  this.$store.state.userLiked = [];
         this.userLiked.userId = this.$store.state.user.id;
         this.userLiked.beerId = element.beerId;
 
@@ -249,7 +249,6 @@ img {
   padding-right: 15px;
   margin-bottom: 5rem;
   text-shadow: rgba(0, 0, 0, 0.8) 0 2.5px 0;
-
 }
 
 .review-button button {
@@ -271,7 +270,6 @@ img {
   display: flex;
   flex-direction: column;
   color: #f1f1f1;
-
 }
 
 .brewery-details h1 {
@@ -290,14 +288,12 @@ img {
 .bottom-container {
   display: flex;
   flex-direction: column;
-
 }
 
 .carousel {
   display: flex;
   align-items: center;
   border-radius: 10px;
-
 }
 
 .material-icons-outlined {
@@ -313,7 +309,6 @@ img {
   color: #f14f29;
   background-color: #f1f1f1;
   border: none;
-
 }
 
 .beer-container {
@@ -326,7 +321,6 @@ img {
   padding: 40px;
   border: 1px solid #48484828;
   border-radius: 10px;
-
 }
 
 .map-container {
@@ -350,8 +344,6 @@ img {
   margin-bottom: 3rem;
 }
 
-
-
 main {
   display: flex;
   flex-direction: column;
@@ -371,25 +363,24 @@ main {
 /* Media query for desktop layout */
 @media screen and (min-width: 770px) {
   main {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: 60px;
-  padding-left: 15px;
-  padding-right: 15px;
-  max-width: 1000px;
-  width: max-content;
-  justify-content: center;
-}
-.bottom-container{
-  align-items: center;
-  justify-content: center;
-}
-.brewery-details{
-  max-width: 50%;
-}
-.material-icons-outlined {
-  font-size: 48px;
-}
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 60px;
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 1000px;
+    width: max-content;
+    justify-content: center;
+  }
+  .bottom-container {
+    align-items: center;
+    justify-content: center;
+  }
+  .brewery-details {
+    max-width: 50%;
+  }
+  .material-icons-outlined {
+    font-size: 48px;
+  }
 }
 </style>
-
