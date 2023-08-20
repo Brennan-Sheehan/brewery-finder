@@ -170,7 +170,6 @@ export default {
     ...mapActions(["getBeersByBrewery", "deleteBeerByBrewery"]),
     getBeerId(name) {
       const beer = this.$store.state.beers.find((d) => d.beerName === name);
-      console.log(this.$store.state.beers.find((d) => d.beerName === name));
       return beer.beerId;
     },
     saveChanges() {

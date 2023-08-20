@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const http = axios.create({
-  baseURL: "http://localhost:9000"
+  baseURL: "http://54.165.31.227:9000"
 })
 export default {
 

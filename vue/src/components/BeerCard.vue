@@ -109,9 +109,9 @@ export default {
               //   this.$store.commit("SET_LIKE_BEERS", this.liked);
           
               // }
-              console.log('add')
+              
               if(!this.$store.state.userLiked.includes(this.liked)){
-                console.log("userLiked")
+               
                     this.$store.commit("SET_USER_LIKED", this.liked)
               }
             }
@@ -122,7 +122,7 @@ export default {
       } else {
         beerService.deleteLikedBeer(this.$store.state.user.id, this.card.beerId).then((response) => {
         if (response.status === 200){
-          console.log('delete')
+          
         this.$store.commit("DELETE_USER_LIKED", this.card.beerId);
         // this.$store.commit("DELETE_LIKE_BEERS", this.card.beerId);
           }

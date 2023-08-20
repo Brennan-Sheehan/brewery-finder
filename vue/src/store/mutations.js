@@ -8,7 +8,6 @@ export default {
   },
   SET_USER(state, user) {
     state.user = user;
-    console.log(user);
     localStorage.setItem("user", JSON.stringify(user));
     state.isAuthenticated = true;
   },
@@ -39,7 +38,6 @@ export default {
   },
   DELETE_LIKE_BREWERIES(state, breweryId) {
     state.likedBreweries = state.likedBreweries.filter((brewery) => {
-      console.log(state.likedBreweries + "Delete Brewery mutation");
       return brewery.breweryId != breweryId;
     });
   },
@@ -89,7 +87,6 @@ export default {
   },
   DELETE_BEER_FROM_ARRAY(state, data) {
     const beer = state.beers.filter((d) => d.id !== data.beerId);
-    console.log(beer);
     state.beers = beer;
   },
   SET_USERS(state, users) {

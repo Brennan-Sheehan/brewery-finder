@@ -202,7 +202,6 @@ export default {
             return this.$store.state.breweries
         }, 
         isBrewer() {
-             console.log(this.$store.state.singleUser)
              let result = this.$store.state.singleUser.authorities.filter(d => d.name === 'ROLE_ADMIN')
              if (result.length > 0) {
                  return true

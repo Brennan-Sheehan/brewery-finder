@@ -56,11 +56,9 @@ export default {
   },
   isManager(state) {
     if (state.isAuthenticated) {
-      console.log(state.user.authorites);
       let result = state.user.authorities.filter(
         (d) => d.name === "ROLE_MANAGER"
       );
-      console.log(result);
       if (result.length > 0) {
         return true;
       } else {

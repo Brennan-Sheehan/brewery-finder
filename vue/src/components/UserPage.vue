@@ -65,7 +65,6 @@ export default {
       return this.$store.state.breweries;
     },
     beers() {
-      console.log(this.$store.state.beers);
       return this.$store.state.beers;
     },
     visibleBreweries() {
@@ -100,7 +99,6 @@ export default {
       const search = this.search.toLowerCase();
       this.filteredBeers = this.beers.filter((beer) => {
         if (beer && beer.beerName) {
-          console.log(this.beers);
           const nameMatch = beer.beerName.toLowerCase().includes(search);
           return nameMatch;
         }
@@ -111,7 +109,6 @@ export default {
       beerService
         .getBeers()
         .then((response) => {
-          console.log(response.data);
           this.$store.commit("SET_LIKE_BEERS", response.data);
         })
         .catch((error) => {
@@ -130,7 +127,6 @@ export default {
           this.userLiked.beerId = element.beerId;
           this.userLiked.beerName = element.beerName;
           this.userLiked.abv = element.abv;
-          console.log(element);
           this.userLiked.image = element.image;
 
           this.$store.commit("SET_USER_LIKED", this.userLiked);

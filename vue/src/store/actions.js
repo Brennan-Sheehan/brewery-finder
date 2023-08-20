@@ -34,11 +34,12 @@ export default {
         commit("SET_API_BREWERIES", apiBreweries);
       })
       .catch((error) => {
-        console.error("Breweries not found", error);
+        if (error.response && error.response.status === 404) {
+          alert("Brewery Not Available");
+        }
       });
   },
   getApiBrewery({ commit }, breweryId) {
-    console.log(breweryId);
     axios
       .get(`https://api.openbrewerydb.org/v1/breweries/${breweryId}`)
       .then((response) => {
@@ -58,7 +59,9 @@ export default {
         commit("SET_API_BREWERY", apiBrewery);
       })
       .catch((error) => {
-        console.error("Error fetching brewery:", error);
+        if (error.response && error.response.status === 404) {
+          alert("Brewery Not Available");
+        }
       });
   },
   getBeersByBrewery({ commit }, breweryId) {
@@ -76,7 +79,6 @@ export default {
   addBeersByBrewery({ commit }, payload) {
     BeerService.createBeerById(payload)
       .then((response) => {
-        console.log(response);
         commit("ADD_BEER_TO_ARRAY", response.data);
       })
       .catch((error) => {
@@ -88,8 +90,9 @@ export default {
   deleteBeerByBrewery({ commit }, payload) {
     BeerService.deleteBeerFromBrewery(payload)
       .then((response) => {
-        commit("DELETE_BEER_FROM_ARRAY", payload);
-        console.log(response.data);
+        if (response.status === 200) {
+          commit("DELETE_BEER_FROM_ARRAY", payload);
+        }
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {

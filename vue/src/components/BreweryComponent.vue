@@ -153,9 +153,6 @@ export default {
           }
         });
     },
-    //   updateAverageRating(newAverage) {
-    //   this.averageRating = newAverage;
-    // },
     getBeers() {
       beerService
         .getBeersByBreweryId(this.$route.params.breweryId)
@@ -191,11 +188,11 @@ export default {
       let city = stringArray[1];
       this.CITY = city.replaceAll(" ", "-");
 
-      //     let stateZip = stringArray[2];
-      //     this.STATE = stateZip.split(" ")[0];
-      //     this.ZIPCODE = stateZip.split(" ")[1];
+      let stateZip = stringArray[2];
+      this.STATE = stateZip.split(" ")[0];
+      this.ZIPCODE = stateZip.split(" ")[1];
 
-      this.url = `https://www.mapquest.com/us/${this.STATE}/${this.CITY}/${this.ZIPCODE}/${this.ADDRESS}`;
+      this.url = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDAr-1vasBNPlrlbWwgbW4tP8_sqQFva8c&q=${this.STATE}+${this.CITY}+${this.ZIPCODE}+${this.ADDRESS}`;
 
       return null;
     },
@@ -368,7 +365,7 @@ main {
     gap: 60px;
     padding-left: 15px;
     padding-right: 15px;
-    max-width: 1000px;
+    max-width: 1200px;
     width: max-content;
     justify-content: center;
   }

@@ -1,8 +1,6 @@
 <template>
   <form>
-  
     <div>
-   
       <textarea v-model="newReview.description" placeholder="Review"></textarea>
     </div>
     <select id="rating" v-model.number="newReview.rating" placeholeder="Rating">
@@ -29,13 +27,11 @@ import reviewService from "../services/ReviewService";
 export default {
   props: ["review", "beerId"],
   data() {
-  
     return {
-      
-      beer:{
-        beerId: this.$store.state.beer.beerId
+      beer: {
+        beerId: this.$store.state.beer.beerId,
       },
-      beerReviews:[],
+      beerReviews: [],
       newReview: {
         reviewId: 0,
         rating: 0,
@@ -45,9 +41,8 @@ export default {
         userId: this.$store.state.user.id,
       },
     };
-    
   },
- 
+
   methods: {
     createBeerReview() {
       this.newReview.beerId = this.beerId;
@@ -55,11 +50,9 @@ export default {
         .createBeerReview(this.newReview)
         .then((response) => {
           if (response.status === 201) {
-            console.log(this.averageRating);
-          
-    this.$store.state.beerReviews.unshift(this.newReview)
-    this.averageRating()
-    this.resetForm()
+            this.$store.state.beerReviews.unshift(this.newReview);
+            this.averageRating();
+            this.resetForm();
           }
         })
         .catch((error) => {
@@ -68,11 +61,6 @@ export default {
         });
     },
     averageRating() {
-    //   if (this.$store.state.beerReviews.length<=1){
-    //     this.beer.averageRating = this.review.rating
-    // this.updateBeerRating(this.brewery.averageRating)
-    //  console.log(this.review.rating + "single rating")
-    //   }else if (this.$store.state.beerReviews.length > 1) {
       let sum = this.$store.state.beerReviews.reduce((currentSum, review) => {
         return currentSum + review.rating;
       }, 0);
@@ -80,33 +68,22 @@ export default {
       const newAverage = (sum / this.$store.state.beerReviews.length).toFixed(
         2
       );
-console.log(newAverage)
-   console.log(this.$store.state.beerReviews)
+
       this.updateAverageRating(newAverage);
-   
-      // }
     },
     updateAverageRating(data) {
       this.$store.state.beer.averageRating = data;
-      // console.log(this.$store.state.beer.averageRating + "this is average rating")
-      // console.log(this.$store.state.beer + " this.beer")
-      reviewService
-        .updateBeerReview(this.$store.state.beer)
-        .then((response) => {
-          console.log(response.data + " This is response data");
-        })
-        .catch((error) => {
-          console.log(error.message);
 
-          if (error.response && error.response.status === 500) {
-            console.log("error updating average rating");
-          }
-        });
+      reviewService.updateBeerReview(this.$store.state.beer).catch((error) => {
+        if (error.response && error.response.status === 500) {
+          this.errorMsg =
+            "Could not update average rating " + error.response.status;
+          alert(this.errorMsg);
+        }
+      });
     },
     resetForm() {
-   
       location.reload();
-    
     },
   },
 };
