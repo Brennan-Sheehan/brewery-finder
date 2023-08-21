@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!-- <form
-  v-show="showForm == true" 
-      v-on:submit.prevent="addNewReview">  -->
-    <div class="loading" v-if="!isLoading">
-      <img src="https://usagif.com/wp-content/uploads/gif/beer-101.gif" />
-    </div>
     <form>
       <div>
         <textarea
@@ -28,10 +22,12 @@
 
       <div>
         <input
-          isLoading="true"
           type="submit"
           value="Save"
-          v-on:click="createBreweryReview()"
+          v-on:click.prevent="
+            createBreweryReview(this.newReview);
+            resetForm();
+          "
         />
         <input type="button" value="Cancel" v-on:click="resetForm()" />
       </div>
@@ -40,71 +36,56 @@
 </template>
 
 <script>
-import BreweryService from "../services/BreweryService";
-import reviewService from "../services/ReviewService";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   props: ["review", "breweryId"],
   name: "review-form",
   data() {
     return {
-      isLoading: true,
       breweryReviews: [],
       newReview: {
         reviewId: "",
         rating: 0,
         description: "",
         userId: this.$store.state.user.id,
-        breweryId: 0,
+        breweryId: this.breweryId,
         beerId: 0,
         username: this.$store.state.user.username,
       },
     };
   },
-
+  computed: {
+    ...mapGetters("reviewModule", ["GET_BREWERY_REVIEWS"]),
+    ...mapGetters("breweryModule", ["GET_BREWERY"]),
+  },
   methods: {
-    createBreweryReview() {
-      this.newReview.breweryId = this.breweryId;
-
-      reviewService
-        .createBreweryReview(this.newReview)
-        .then((response) => {
-          if (response.status === 201) {
-            this.$store.state.breweryReviews.unshift(this.newReview);
-            this.averageRating();
-            this.resetForm();
-          }
-        })
-        .catch((error) => {
-          this.errorMsg = "Could not save review " + error.response.status;
-          alert(this.errorMsg);
-        });
-    },
+    ...mapActions("reviewModule", ["createBreweryReview"]),
+    ...mapActions("breweryModule", ["updateBreweryRating"]),
     resetForm() {
-      location.reload();
+      this.newReview = {
+        reviewId: "",
+        rating: 0,
+        description: "",
+        userId: this.$store.state.user.id,
+        breweryId: this.breweryId,
+        beerId: 0,
+        username: this.$store.state.user.username,
+      };
+      this.$emit("close");
+      this.averageRating();
     },
     averageRating() {
-      let sum = this.$store.state.breweryReviews.reduce(
-        (currentSum, review) => {
-          return currentSum + review.rating;
-        },
-        0
-      );
+      this.breweryReviews = this.GET_BREWERY_REVIEWS;
 
-      const newAverage = (
-        sum / this.$store.state.breweryReviews.length
-      ).toFixed(2);
+      let sum = this.breweryReviews.reduce((currentSum, review) => {
+        return currentSum + review.rating;
+      }, 0);
 
-      this.updateBreweryRating(newAverage);
-    },
-    updateBreweryRating(data) {
-      this.$store.state.brewery.averageRating = data;
-      BreweryService.updateBrewery(this.$store.state.brewery).catch((error) => {
-        if (error.response && error.response.status === 500) {
-          this.errorMsg =
-            "Could not update average rating " + error.response.status;
-          alert(this.errorMsg);
-        }
-      });
+      const newAverage = (sum / this.breweryReviews.length).toFixed(2);
+
+      this.GET_BREWERY.averageRating = newAverage;
+      this.updateBreweryRating(this.GET_BREWERY);
     },
   },
 };

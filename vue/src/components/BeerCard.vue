@@ -69,7 +69,8 @@
 
 <script>
 // import BeerReviewList from './BeerReviewList.vue'
-import beerService from "../services/BeerService";
+import { mapActions, mapGetters } from "vuex";
+// import beerService from "../services/BeerService";
 
 export default {
   props: ["card"],
@@ -83,8 +84,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("beerModule", ["GET_LIKED_BEERS"]),
     isLiked() {
-      let likedBeer = this.$store.state.userLiked.find((beer) => {
+      let likedBeer = this.GET_LIKED_BEERS.find((beer) => {
         if (beer.beerId == this.card.beerId) {
           return beer;
         }
@@ -99,54 +101,63 @@ export default {
     },
   },
   methods: {
+    ...mapActions("beerModule", ["addLikedBeer", "deleteLikedBeer"]),
     toggleLike(isLiked) {
       if (!isLiked) {
-        beerService
-          .addLikedBeer(this.card.beerId, this.$store.state.user.id)
-          .then((response) => {
-            if (response.status === 202) {
-              // if (!this.$store.state.likedBeers.includes(this.liked)) {
-              //   this.$store.commit("SET_LIKE_BEERS", this.liked);
-          
-              // }
-              
-              if(!this.$store.state.userLiked.includes(this.liked)){
-               
-                    this.$store.commit("SET_USER_LIKED", this.liked)
-              }
-            }
-          })
-          .catch((error) => {
-            this.errorMsg = "Could not add beer" + error.response.status;
-          });
-      } else {
-        beerService.deleteLikedBeer(this.$store.state.user.id, this.card.beerId).then((response) => {
-        if (response.status === 200){
-          
-        this.$store.commit("DELETE_USER_LIKED", this.card.beerId);
-        // this.$store.commit("DELETE_LIKE_BEERS", this.card.beerId);
-          }
-        })
-        .catch((error) => {
-          this.errorMsg = "Could not delete" + error.response.status;
+        this.addLikedBeer({
+          beerId: this.card.beerId,
+          userId: this.$store.state.user.id,
+          beer: this.card,
         });
+        // beerService
+        //   .addLikedBeer(this.card.beerId, this.$store.state.user.id)
+        //   .then((response) => {
+        //     if (response.status === 202) {
+        //       // if (!this.$store.state.likedBeers.includes(this.liked)) {
+        //       //   this.$store.commit("SET_LIKE_BEERS", this.liked);
+
+        //       // }
+
+        //       if (!this.$store.state.userLiked.includes(this.liked)) {
+        //         this.$store.commit("SET_USER_LIKED", this.liked);
+        //       }
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     this.errorMsg = "Could not add beer" + error.response.status;
+        //   });
+      } else {
+        this.deleteLikedBeer({
+          beerId: this.card.beerId,
+          userId: this.$store.state.user.id,
+        });
+        // beerService
+        //   .deleteLikedBeer(this.$store.state.user.id, this.card.beerId)
+        //   .then((response) => {
+        //     if (response.status === 200) {
+        //       this.$store.commit("DELETE_USER_LIKED", this.card.beerId);
+        //       // this.$store.commit("DELETE_LIKE_BEERS", this.card.beerId);
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     this.errorMsg = "Could not delete" + error.response.status;
+        //   });
       }
     },
   },
   created() {
-  //   beerService.getLikedBeers(this.$store.state.user).then((response) => {
-  //     response.data.forEach((element) => {
-  //       // this.$store.state.likedBeers = [];
-  //       this.userLiked.userId = this.$store.state.user.id;
-  //       this.userLiked.beerId = element.beerId;
-      
-  //       this.$store.commit("SET_LIKE_BEERS", this.userLiked);
-  //       this.userLiked = {};
-  //     });
-  //   });
-  // }
-  // this.$store.state.likedBeers = this.$store.state.userLiked
-  }
+    //   beerService.getLikedBeers(this.$store.state.user).then((response) => {
+    //     response.data.forEach((element) => {
+    //       // this.$store.state.likedBeers = [];
+    //       this.userLiked.userId = this.$store.state.user.id;
+    //       this.userLiked.beerId = element.beerId;
+    //       this.$store.commit("SET_LIKE_BEERS", this.userLiked);
+    //       this.userLiked = {};
+    //     });
+    //   });
+    // }
+    // this.$store.state.likedBeers = this.$store.state.userLiked
+  },
 };
 </script>
 
@@ -248,7 +259,7 @@ img {
   color: #ccc;
   position: relative;
   font-size: 2rem;
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 .no-review-text {
   font-size: 1rem;
@@ -291,5 +302,3 @@ span {
   z-index: 0;
 }
 </style>
-
-

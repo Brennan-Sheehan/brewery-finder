@@ -8,12 +8,28 @@
           </div>
           <div class="modal-body">
             <div id="add-beer">
-              <form @submit="addBeersByBrewery({breweryId:brewery.breweryId, beer:beer }), $emit('close')">
-                <h1>Please add beer information {{brewery.breweryId}}</h1>
+              <div class="loading" v-if="isLoading">
+                <img src="../assets/beer_loader.gif" />
+              </div>
+              <form
+                @submit.prevent="
+                  isLoading = true;
+                  addBeerByBrewery({
+                    breweryId: brewery.breweryId,
+                    beer: this.beer,
+                  });
+                  exit();
+                "
+              >
+                <h1>Please add beer information {{ brewery.breweryName }}</h1>
                 <div class="alert" role="alert" v-if="invalidInput">
                   Invalid username and password!
                 </div>
-                <div class="alert" role="alert" v-if="this.$store.state.registrationSuccess">
+                <div
+                  class="alert"
+                  role="alert"
+                  v-if="this.$store.state.registrationSuccess"
+                >
                   Thank you for registering, please sign in.
                 </div>
                 <div class="form-input-group">
@@ -55,27 +71,20 @@
                 </div>
                 <div class="form-input-group">
                   <label for="abv">ABV:</label>
-                  <input
-                    type="text"
-                    id="abv"
-                    v-model="beer.abv"
-                    required
-                  />
+                  <input type="text" id="abv" v-model="beer.abv" required />
                 </div>
                 <div class="form-input-group">
                   <label for="image">Image URL:</label>
-                  <input
-                    type="text"
-                    id="image"
-                    v-model="beer.image"
-                    required
-                  />
+                  <input type="text" id="image" v-model="beer.image" required />
                 </div>
-                
+
                 <div class="modal-footer">
-                  <input class="button" value="Cancel" @click="$emit('close')"/>
+                  <input
+                    class="button"
+                    value="Cancel"
+                    @click="$emit('close')"
+                  />
                   <button class="save" type="submit">Add Beer</button>
-                  
                 </div>
               </form>
             </div>
@@ -87,43 +96,65 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "create-beer",
-  props:['brewery'],
+  props: ["brewery"],
   data() {
-      return {
-          beer: {
-            beerId: '',
-            beerName: '',
-            description: '',
-            rating: 1,
-            beerType: '',
-            tastingNotes: '',
-            abv: 0,
-            averageRating: 0,
-            image: ''
-          },
-          invalidInput: false,
-      }
+    return {
+      beer: {
+        beerId: "",
+        beerName: "",
+        description: "",
+        rating: 1,
+        beerType: "",
+        tastingNotes: "",
+        abv: 0,
+        averageRating: 0,
+        image: "",
+      },
+      invalidInput: false,
+      isLoading: false,
+    };
   },
-  components: {},
-  
+  components: {
+    ...mapGetters("breweryModule", ["GET_BREWERY"]),
+  },
+
   methods: {
-    ...mapActions(["addBeersByBrewery"])
+    ...mapActions("beerModule", ["addBeerByBrewery", "getBeersByBrewery"]),
+
     //Change invalidInput to true if the server response is 400
+    exit() {
+      setTimeout(() => {
+        this.getBeersByBrewery(this.brewery.breweryId);
+        this.$emit("close");
+        this.isLoading = false;
+      }, 2000);
+    },
   },
 };
 </script>
 
 <style scoped>
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  background-color: rgba(15, 65, 58, 0.87);
+}
 .form-input-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
 }
-
 
 label {
   font-size: 14px;
@@ -205,7 +236,7 @@ p {
   border-bottom: 1px solid rgba(25, 4, 69, 0.1);
 }
 .modal-body {
-    max-height: 600px;
+  max-height: 600px;
 }
 .modal-footer {
   display: flex;
@@ -311,7 +342,6 @@ button {
   width: 68px;
 }
 .button {
- 
   cursor: pointer;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -335,6 +365,5 @@ button {
   background-color: fff;
   border: 1px solid rgba(25, 4, 69, 0.2);
   width: 68px;
-
 }
 </style>

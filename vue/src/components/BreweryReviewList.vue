@@ -1,12 +1,16 @@
 <template>
   <div>
-    <review v-for="review in reviewGetter" :key="review.id" :review="review" />
+    <review
+      v-for="review in GET_BREWERY_REVIEWS"
+      :key="review.id"
+      :review="review"
+    />
   </div>
 </template>
 
 <script>
-import reviewService from "../services/ReviewService.js";
 import Review from "../components/ReviewComponent";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["brewery"],
   components: {
@@ -18,34 +22,13 @@ export default {
     };
   },
   computed: {
-    reviewGetter() {
-      return this.$store.state.breweryReviews;
-    },
-  },
-  watch: {
-    reviewGetter: {
-      deep: true,
-      handler: function (newReview) {
-        this.breweryReviews = newReview;
-      },
-    },
+    ...mapGetters("reviewModule", ["GET_BREWERY_REVIEWS"]),
   },
   methods: {
-    getBreweryReviews() {
-      reviewService
-        .listReviewsByBreweryId(this.$route.params.breweryId)
-        .then((response) => {
-          this.$store.commit("SET_BREWERIES_REVIEWS_ARRAY", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("No Reviews for this brewery");
-          }
-        });
-    },
+    ...mapActions("reviewModule", ["getBreweryReviews"]),
   },
   created() {
-    this.getBreweryReviews();
+    this.getBreweryReviews(this.$route.params.breweryId);
   },
 };
 </script>

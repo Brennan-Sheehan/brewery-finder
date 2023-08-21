@@ -27,15 +27,12 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import ApiBreweryCard from "./ApiBreweryCard.vue";
 
 export default {
   name: "ApiSearch",
   props: ["card"],
-  mounted() {
-    this.$store.dispatch("getApiBreweries");
-    this.applyFilter();
-  },
   components: {
     ApiBreweryCard,
   },
@@ -46,31 +43,39 @@ export default {
     };
   },
   computed: {
-    apiBreweries() {
-      return this.$store.state.apiBreweries;
-    },
+    ...mapGetters("breweryModule", ["GET_API_BREWERIES"]),
+    // apiBreweries() {
+    //   return this.$store.state.apiBreweries;
+    // },
     visibleApiBreweries() {
       return this.filteredApiBreweries.length > 0
         ? this.filteredApiBreweries
-        : this.apiBreweries;
+        : this.GET_API_BREWERIES;
     },
   },
   methods: {
+    ...mapActions("breweryModule", ["getApiBreweries"]),
     applyFilter() {
       const search = this.search.toLowerCase();
-      this.filteredApiBreweries = this.apiBreweries.filter((apiBrewery) => {
-        if (apiBrewery && apiBrewery.breweryName && apiBrewery.address) {
-          const nameMatch = apiBrewery.breweryName
-            .toLowerCase()
-            .includes(search);
-          const addressMatch = apiBrewery.address
-            .toLowerCase()
-            .includes(search);
-          return nameMatch || addressMatch;
+      this.filteredApiBreweries = this.GET_API_BREWERIES.filter(
+        (apiBrewery) => {
+          if (apiBrewery && apiBrewery.breweryName && apiBrewery.address) {
+            const nameMatch = apiBrewery.breweryName
+              .toLowerCase()
+              .includes(search);
+            const addressMatch = apiBrewery.address
+              .toLowerCase()
+              .includes(search);
+            return nameMatch || addressMatch;
+          }
+          return false;
         }
-        return false;
-      });
+      );
     },
+  },
+  mounted() {
+    this.getApiBreweries();
+    this.applyFilter();
   },
 };
 </script>

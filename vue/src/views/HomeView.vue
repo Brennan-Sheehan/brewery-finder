@@ -37,7 +37,8 @@
 
 <script>
 import BreweryCard from "../components/BreweryCard.vue";
-import breweryService from "../services/BreweryService";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "HomeView",
   props: ["card"],
@@ -48,24 +49,23 @@ export default {
     return {
       search: "",
       filteredBreweries: [],
-      userLiked: {},
-      likedBreweries: [],
     };
   },
   computed: {
-    breweries() {
-      return this.$store.state.breweries;
-    },
+    ...mapGetters("breweryModule", ["GET_BREWERIES"]),
+
     visibleBreweries() {
       return this.filteredBreweries.length > 0
         ? this.filteredBreweries
-        : this.breweries;
+        : this.GET_BREWERIES;
     },
   },
   methods: {
+    ...mapActions("breweryModule", ["getBreweries", "getLikedBreweries"]),
+    ...mapActions("beerModule", ["getBeers", "getLikedBeers"]),
     applyFilter() {
       const search = this.search.toLowerCase();
-      this.filteredBreweries = this.breweries.filter((brewery) => {
+      this.filteredBreweries = this.GET_BREWERIES.filter((brewery) => {
         if (brewery && brewery.breweryName && brewery.address) {
           const nameMatch = brewery.breweryName.toLowerCase().includes(search);
           const addressMatch = brewery.address.toLowerCase().includes(search);
@@ -75,18 +75,11 @@ export default {
       });
     },
   },
-  created() {
-    this.$store.state.likedBreweries = [];
-    breweryService
-      .getLikedBreweries(this.$store.state.user)
-      .then((response) => {
-        response.data.forEach((element) => {
-          this.userLiked.userId = this.$store.state.user.id;
-          this.userLiked.breweryId = element.breweryId;
-          this.$store.commit("SET_LIKE_BREWERIES", this.userLiked);
-          this.userLiked = {};
-        });
-      });
+  mounted() {
+    this.getBreweries();
+    this.getBeers();
+    this.getLikedBeers(this.$store.state.user);
+    this.getLikedBreweries(this.$store.state.user);
   },
 };
 </script>

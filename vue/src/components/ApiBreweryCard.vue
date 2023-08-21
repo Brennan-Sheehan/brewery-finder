@@ -39,19 +39,22 @@ export default {
 </script>
 
 <style scoped>
-.main-brewery-card {
+.main-api-brewery-card {
   box-shadow: 1rem 1rem 4rem rgba(71, 74, 95, 0.623);
   border-radius: 4px;
   overflow: hidden;
+  height: 200px;
+  width: 350px;
 }
 .card-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   background: rgba(36, 36, 36, 0.479);
   overflow: hidden;
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 img {
   object-fit: cover;

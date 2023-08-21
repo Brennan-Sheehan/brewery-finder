@@ -1,6 +1,8 @@
 <template>
   <div class="main-brewery-card">
-    <router-link :to="{ name: 'brewery', params: { breweryId: card.breweryId } }">
+    <router-link
+      :to="{ name: 'brewery', params: { breweryId: card.breweryId } }"
+    >
       <div class="card-container">
         <div class="card-content">
           <div class="image-mask">
@@ -12,67 +14,69 @@
               <div>{{ card.address }}</div>
               <div>{{ card.phoneNumber }}</div>
             </div>
-                
           </div>
           <div class="footer">
-    <div v-if="card.averageRating >0" class="star-ratings">
-  <div class="fill-ratings" :style="{ width: (card.averageRating / 5 * 100).toFixed(2) + '%' }">
-    <span>★★★★★</span>
-  </div>
-  <div class="empty-ratings">
-    <span>★★★★★</span>
-  </div>
-  <span
-    :class="{
-      'filled-hearts': isLiked,
-      'empty-hearts': !isLiked,
-    }"
-    @click.prevent="toggleLike(isLiked)"
-    style="cursor: pointer"
-  >
-    ♥
-  </span>
-</div>
-<div v-else class="no-review">
-  <div class="no-review-text">
-    Add Review
-  </div>
-  <span
-    :class="{
-      'filled-hearts': isLiked,
-      'empty-hearts': !isLiked,
-    }"
-    @click.prevent="toggleLike(isLiked)"
-    style="cursor: pointer"
-  >
-    ♥
-  </span>
-</div>
-</div>
+            <div v-if="card.averageRating > 0" class="star-ratings">
+              <div
+                class="fill-ratings"
+                :style="{
+                  width: ((card.averageRating / 5) * 100).toFixed(2) + '%',
+                }"
+              >
+                <span>★★★★★</span>
+              </div>
+              <div class="empty-ratings">
+                <span>★★★★★</span>
+              </div>
+              <span
+                :class="{
+                  'filled-hearts': isLiked,
+                  'empty-hearts': !isLiked,
+                }"
+                @click.prevent="toggleLike(isLiked)"
+                style="cursor: pointer"
+              >
+                ♥
+              </span>
+            </div>
+            <div v-else class="no-review">
+              <div class="no-review-text">Add Review</div>
+              <span
+                :class="{
+                  'filled-hearts': isLiked,
+                  'empty-hearts': !isLiked,
+                }"
+                @click.prevent="toggleLike(isLiked)"
+                style="cursor: pointer"
+              >
+                ♥
+              </span>
+            </div>
+          </div>
         </div>
-        
       </div>
     </router-link>
   </div>
 </template>
 
 <script>
-import breweryService from '../services/BreweryService'
-export default {
+import { mapActions, mapGetters } from "vuex";
 
+export default {
   props: ["card"],
-  data(){
-    return{
- liked: {
+  data() {
+    return {
+      liked: {
         breweryId: this.card.breweryId,
         userId: this.$store.state.user.id,
       },
       userLiked: {},
     };
-    },
+  },
   computed: {
+    ...mapGetters("breweryModule", ["GET_LIKED_BREWERIES"]),
     isLiked() {
-      let likedBrewery = this.$store.state.likedBreweries.find((brewery) => {
+      let likedBrewery = this.GET_LIKED_BREWERIES.find((brewery) => {
         if (brewery.breweryId == this.card.breweryId) {
           return brewery;
         }
@@ -86,43 +90,23 @@ export default {
       }
     },
   },
-   methods: {
+  methods: {
+    ...mapActions("breweryModule", ["addLikedBrewery", "deleteLikedBrewery"]),
     toggleLike(isLiked) {
       if (!isLiked) {
-        breweryService
-          .addLikedBrewery(this.card.breweryId, this.$store.state.user.id)
-          .then((response) => {
-            if (response.status === 202) {
-              if (!this.$store.state.likedBreweries.includes(this.liked)) {
-                this.$store.commit("SET_LIKE_BREWERIES", this.liked);
-              }
-            }
-          })
-          .catch((error) => {
-            this.errorMsg = "Could not add brewery" + error.response.status;
-          });
+        this.addLikedBrewery({
+          breweryId: this.card.breweryId,
+          userId: this.$store.state.user.id,
+          brewery: this.card,
+        });
       } else {
-        breweryService.deleteLikedBrewery(this.$store.state.user.id, this.card.breweryId).then((response) => {
-        if (response.status === 200){
-        this.$store.commit("DELETE_LIKE_BREWERIES", this.card.breweryId);
-          }
-        })
-        .catch((error) => {
-          this.errorMsg = "Could not delete" + error.response.status;
+        this.deleteLikedBrewery({
+          breweryId: this.card.breweryId,
+          userId: this.$store.state.user.id,
         });
       }
     },
   },
-  created() {
-    // breweryService.getLikedBreweries(this.$store.state.user).then((response) => {
-    //   response.data.forEach((element) => {
-    //     this.userLiked.userId = this.$store.state.user.id;
-    //     this.userLiked.breweryId = element.breweryId;
-    //     this.$store.commit("SET_LIKE_BREWERIES", this.userLiked);
-    //     this.userLiked = {};
-    //   });
-    // });
-  }
 };
 </script>
 
@@ -132,7 +116,7 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   height: 200px;
-  width: 350px; 
+  width: 350px;
 }
 
 .card-container {
@@ -142,12 +126,12 @@ export default {
   background: #f1f1f1;
   overflow: hidden;
   position: relative;
-  height: 100%; 
+  height: 100%;
   width: 100%;
 }
 .footer {
   display: flex;
-  text-decoration:none;
+  text-decoration: none;
   color: #e7711b;
   text-align: left;
   width: 100%;
@@ -157,7 +141,7 @@ export default {
 }
 
 .card-content {
-  height: 100%; 
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -170,14 +154,14 @@ export default {
 }
 .card-image {
   object-fit: cover;
-  height: 100%; 
+  height: 100%;
   width: 100%;
   opacity: 0.4;
 }
 
 .no-review {
   color: #ccc;
-position: absolute;
+  position: absolute;
   position: relative;
   margin: 0;
   padding: 0;
@@ -186,7 +170,7 @@ position: absolute;
   padding-bottom: 0.2rem;
 }
 
-.no-review-text{
+.no-review-text {
   font-size: 1rem;
   color: #e7711b;
   text-decoration: none;
@@ -204,7 +188,7 @@ position: absolute;
   position: absolute;
   top: 0;
   left: 300px;
-  padding-top: .22rem;
+  padding-top: 0.22rem;
 }
 .card-info {
   display: flex;
@@ -251,7 +235,6 @@ position: absolute;
   font-size: 15px;
 }
 
-
 .icon-star-empty {
   margin-right: 5px;
   color: #ffb400;
@@ -272,24 +255,24 @@ position: absolute;
   margin: 0;
   padding: 0;
 }
-  .fill-ratings {
-    color: #e7711b;
-    padding: 0;
-    position: absolute;
-    z-index: 1;
-    display: block;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-  }
-   
-    span {
-      display: inline-block;
-    }
-  
-  .empty-ratings {
-    padding: 0;
-    display: block;
-    z-index: 0;
-  }
+.fill-ratings {
+  color: #e7711b;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: block;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+span {
+  display: inline-block;
+}
+
+.empty-ratings {
+  padding: 0;
+  display: block;
+  z-index: 0;
+}
 </style>

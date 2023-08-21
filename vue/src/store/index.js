@@ -1,10 +1,11 @@
 import { createStore } from "vuex";
-
 import actions from "./actions";
 import mutations from "./mutations";
 import getters from "./getters";
-
 import axios from "axios";
+import breweryModule from "./modules/brewery";
+import beerModule from "./modules/beer";
+import reviewModule from "./modules/reviews";
 
 /*
  * The authorization header is set for axios when you login but what happens when you come back or
@@ -28,20 +29,7 @@ const state = {
   showLogoutModal: false,
   registrationSuccess: false,
   isAuthenticated: false,
-  brewery: {},
-  breweries: [],
-  userLiked: [],
-  beer: {},
-  beers: [],
-  liked: {},
-  likedBeers: [],
-  likedBreweries: [],
-  beerReview: {},
-  breweryReview: {},
-  beerReviews: [],
-  breweryReviews: [],
-  apiBreweries: [],
-  apiBrewery: {},
+
   users: [],
   singleUser: {},
 };
@@ -51,4 +39,9 @@ export default createStore({
   getters,
   actions,
   mutations,
+  modules: {
+    breweryModule,
+    beerModule,
+    reviewModule,
+  },
 });

@@ -1,21 +1,18 @@
 <template>
   <div>
     <main>
-      <div class="loading" v-if="isLoading">
-        <img src="../assets/beer_loader.gif" />
-      </div>
       <section class="top-section">
         <div class="image-wrapper">
           <div class="image-container">
-            <img :src="beer.image" alt="" />
+            <img :src="GET_BEER.image" alt="" />
           </div>
         </div>
         <div class="content">
-          <h1>{{ beer.beerName }}</h1>
+          <h1>{{ GET_BEER.beerName }}</h1>
           <div class="beer-type">
-            {{ beer.beerType }}
+            {{ GET_BEER.beerType }}
           </div>
-          <div>{{ beer.abv }}% ABV</div>
+          <div>{{ GET_BEER.abv }}% ABV</div>
         </div>
 
         <div class="review-button">
@@ -29,25 +26,22 @@
           <button v-on:click.prevent="showForm = true" v-else>
             Write a Review
           </button>
-          <beer-review-form
-            v-show="showForm"
-            v-bind:beerId="this.beer.beerId"
-          />
+          <beer-review-form v-show="showForm" />
         </div>
       </section>
       <section class="bottom-section">
         <div>
           <h3>Tasting Notes</h3>
-          {{ beer.tastingNotes }}
+          {{ GET_BEER.tastingNotes }}
         </div>
         <!-- {{beer.averageRating}} -->
         <div>
           <h3>Descripion</h3>
-          {{ beer.description }}
+          {{ GET_BEER.description }}
         </div>
         <div>
           <h3>Reviews</h3>
-          <beer-review-list v-bind:beer="beer" />
+          <beer-review-list />
         </div>
       </section>
     </main>
@@ -55,55 +49,27 @@
 </template>
 
 <script>
-import beerService from "../services/BeerService";
 import BeerReviewList from "./BeerReviewList.vue";
 import beerReviewForm from "./BeerReviewForm.vue";
-
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "BeerComponent",
   components: { BeerReviewList, beerReviewForm },
   data() {
     return {
-      isLoading: true,
-      beer: this.$store.state.beer,
       showForm: false,
       aboutName: "",
     };
   },
-  mounted() {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
-  },
   computed: {
-    beerGetter() {
-      return this.$store.state.beer;
-    },
+    ...mapGetters("beerModule", ["GET_BEER"]),
   },
-  watch: {
-    beerGetter: {
-      deep: true,
-      handler: function (newBeer) {
-        this.beer = newBeer;
-      },
-    },
-  },
+
   methods: {
-    getBeer() {
-      beerService
-        .getBeerById(this.$route.params.beerId)
-        .then((response) => {
-          this.$store.commit("SET_BEER", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("Beer not available");
-          }
-        });
-    },
+    ...mapActions("beerModule", ["getBeerById"]),
   },
-  created() {
-    this.getBeer();
+  mounted() {
+    this.getBeerById(this.$route.params.beerId);
   },
 };
 </script>

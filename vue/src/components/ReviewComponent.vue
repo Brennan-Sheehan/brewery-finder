@@ -1,10 +1,5 @@
 <template>
   <div class="outer-box">
-    <!-- <beer-card :computedProp="averageRating">
-         <i class="icon-star" v-for="n in review.averageRating" :key="n"></i>
-         <i class="icon-star-empty" v-for="n in maxStars - review.averageRating" :key="n"></i>
-</beer-card> -->
-
     <div class="review">
       <div class="review-name">
         {{ review.username }}
@@ -14,17 +9,13 @@
       </div>
       <div class="star-rating">
         <i class="icon-star" v-for="n in review.rating" :key="n"></i>
-        <!-- <i class="icon-star-empty" v-for="n in maxStars - review.rating" :key="n"></i> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import BeerCard from './BeerCard.vue'
-
 export default {
-  //   components: { BeerCard },
   data() {
     return {};
   },

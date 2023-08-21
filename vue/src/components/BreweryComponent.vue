@@ -1,19 +1,19 @@
 <template>
   <div class="brewery">
     <div class="brewery-header-container">
-      <img :src="brewery.breweryImage" />
+      <img :src="GET_BREWERY.breweryImage" />
       <div class="brewery-details-container">
         <div class="brewery-details">
-          <h1 class="brewery-name">{{ brewery.breweryName }}</h1>
+          <h1 class="brewery-name">{{ GET_BREWERY.breweryName }}</h1>
           <div class="contact">
             <div class="brewery-contact-info">
               <div>
-                {{ brewery.phoneNumber }}
+                {{ GET_BREWERY.phoneNumber }}
               </div>
-              {{ brewery.address }}
+              {{ GET_BREWERY.address }}
             </div>
             <div class="brewery-store-hours">
-              {{ brewery.operatingHours }}
+              {{ GET_BREWERY.operatingHours }}
             </div>
           </div>
         </div>
@@ -26,7 +26,7 @@
         </button>
         <div class="beer-container" id="con" ref="content">
           <beer-card
-            v-for="card in beers"
+            v-for="card in GET_BEERS"
             v-bind:key="card.beerId"
             v-bind:card="card"
           />
@@ -40,10 +40,10 @@
           <!-- <div class="map-container">Possible Map</div> -->
           <WebDisplay v-bind:webPageUrl="url" />
           <div class="lower-contact">
-            <div class="lower-address">{{ brewery.address }}</div>
-            <div class="lower-phone">{{ brewery.phoneNumber }}</div>
-            <div class="lower-emailAddress">{{ brewery.emailAddress }}</div>
-            <div class="lower-hours">{{ brewery.operatingHours }}</div>
+            <div class="lower-address">{{ GET_BREWERY.address }}</div>
+            <div class="lower-phone">{{ GET_BREWERY.phoneNumber }}</div>
+            <div class="lower-emailAddress">{{ GET_BREWERY.emailAddress }}</div>
+            <div class="lower-hours">{{ GET_BREWERY.operatingHours }}</div>
           </div>
         </div>
 
@@ -51,13 +51,13 @@
           <div class="brewery-description">
             <h2>Brewery Description</h2>
             <div class="brewery-description-content">
-              {{ brewery.breweryHistory }}
+              {{ GET_BREWERY.breweryHistory }}
             </div>
           </div>
 
           <div class="rating">
             <div class="brewery-rating">
-              {{ brewery.rating }}
+              {{ GET_BREWERY.averageRating }}
             </div>
           </div>
           <div class="rating">
@@ -76,7 +76,8 @@
                 </button>
                 <brewery-review-form
                   v-show="showForm"
-                  v-bind:breweryId="this.brewery.breweryId"
+                  v-bind:breweryId="GET_BREWERY.breweryId"
+                  @close="showForm = false"
                 />
               </div>
             </div>
@@ -93,12 +94,12 @@
 </template>
 
 <script>
-import breweryServices from "../services/BreweryService";
 import BeerCard from "../components/BeerCard.vue";
 import beerService from "../services/BeerService";
 import breweryReviewForm from "./BreweryReviewForm.vue";
 import BreweryReview from "../components/BreweryReviewList.vue";
 import WebDisplay from "./WebDisplay.vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BreweryComponent",
@@ -106,8 +107,8 @@ export default {
   data() {
     return {
       userLiked: {},
-      brewery: this.$store.state.brewery,
       showForm: false,
+      brewery: {},
       url: "",
       STATE: "",
       CITY: "",
@@ -124,47 +125,14 @@ export default {
     WebDisplay,
   },
   computed: {
-    breweryGetter() {
-      return this.$store.state.brewery;
-    },
-    beers() {
-      return this.$store.state.beers;
-    },
+    ...mapGetters("breweryModule", ["GET_BREWERY"]),
+    ...mapGetters("beerModule", ["GET_BEERS"]),
   },
 
-  watch: {
-    breweryGetter: {
-      deep: true,
-      handler: function (newBrewery) {
-        this.brewery = newBrewery;
-      },
-    },
-  },
   methods: {
-    getBrewery() {
-      breweryServices
-        .getBreweryById(this.$route.params.breweryId)
-        .then((response) => {
-          this.$store.commit("SET_BREWERY", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("Brewery Not Available");
-          }
-        });
-    },
-    getBeers() {
-      beerService
-        .getBeersByBreweryId(this.$route.params.breweryId)
-        .then((response) => {
-          this.$store.commit("SET_BEERS_ARRAY", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("Beer Not Available");
-          }
-        });
-    },
+    ...mapMutations("breweryModule", ["SET_BREWERY"]),
+    ...mapActions("breweryModule", ["getBreweryById"]),
+    ...mapActions("beerModule", ["getBeersByBrewery"]),
     scrollContent(isRight) {
       if (isRight) {
         this.contentScrollLeft += 500;
@@ -180,7 +148,7 @@ export default {
       this.$refs.content.scrollLeft = this.contentScrollLeft;
     },
     breweryUrl() {
-      let stringArray = this.brewery.address.split(", ");
+      let stringArray = this.GET_BREWERY.address.split(", ");
       // now have 3 strings
       let address = stringArray[0];
       this.ADDRESS = address.replaceAll(" ", "-");
@@ -197,13 +165,13 @@ export default {
       return null;
     },
   },
+  updated() {
+    this.breweryUrl();
+  },
   created() {
-    this.getBrewery();
-    this.getBeers();
     this.$store.state.userLiked = [];
     beerService.getLikedBeers(this.$store.state.user).then((response) => {
       response.data.forEach((element) => {
-        //  this.$store.state.userLiked = [];
         this.userLiked.userId = this.$store.state.user.id;
         this.userLiked.beerId = element.beerId;
 
@@ -212,10 +180,9 @@ export default {
       });
     });
   },
-  updated() {
-    this.breweryUrl();
-  },
   mounted() {
+    this.getBreweryById(this.$route.params.breweryId);
+    this.getBeersByBrewery(this.$route.params.breweryId);
     this.contentScrollWidth = this.$refs.content.scrollWidth;
     this.contentScrollLeft = this.$refs.content.scrollLeft;
   },

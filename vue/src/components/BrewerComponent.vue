@@ -83,7 +83,7 @@
                 <span class="material-icons-outlined"> add_circle </span>
               </button>
               <CreateBeerModal
-                v-bind:brewery="brewery"
+                v-bind:brewery="GET_BREWERY"
                 v-if="showModal"
                 @close="showModal = false"
               >
@@ -91,7 +91,7 @@
               </CreateBeerModal>
 
               <BeerCard
-                v-for="card in beers"
+                v-for="card in GET_BEERS"
                 v-bind:key="card.beerId"
                 v-bind:card="card"
                 class="beer-card"
@@ -103,13 +103,13 @@
                 class="delete-form"
                 @submit="
                   deleteBeerByBrewery({
-                    breweryId: brewery.breweryId,
+                    breweryId: GET_BREWERY.breweryId,
                     beerId: getBeerId(selectedCard),
                   })
                 "
               >
                 <select name="beer-card-select" v-model="selectedCard">
-                  <option v-for="card in beers" :key="card.beerId">
+                  <option v-for="card in GET_BEERS" :key="card.beerId">
                     {{ card.beerName }}
                   </option>
                 </select>
@@ -124,10 +124,9 @@
 </template>
 
 <script>
-import brewerService from "../services/BreweryService";
-import CreateBeerModal from "../components/CreateBeerModal.vue";
+import CreateBeerModal from "../components/BeerCreateModal.vue";
 import BeerCard from "../components/BeerCard.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "BrewerComponent",
@@ -135,16 +134,6 @@ export default {
   data() {
     return {
       brewery: {
-        breweryId: "",
-        name: "",
-        phoneNumber: "",
-        emailAddress: "",
-        address: "",
-        breweryHistory: "",
-        operatingHours: "",
-        breweryImage: "",
-        longitude: "",
-        latitude: "",
         from_third_party: false,
         brewerId: this.$route.params.brewerId,
       },
@@ -162,76 +151,56 @@ export default {
     CreateBeerModal,
   },
   computed: {
-    beers() {
-      return this.$store.state.beers;
-    },
+    ...mapGetters("beerModule", ["GET_BEERS"]),
+    ...mapGetters("breweryModule", ["GET_BREWERY"]),
   },
   methods: {
-    ...mapActions(["getBeersByBrewery", "deleteBeerByBrewery"]),
+    ...mapActions("beerModule", [
+      "getBeersByBrewery",
+      "deleteBeerByBrewery",
+      "addBeerByBrewery",
+    ]),
+    ...mapActions("breweryModule", [
+      "getBreweryByBrewerId",
+      "createBrewery",
+      "updateBrewery",
+    ]),
     getBeerId(name) {
-      const beer = this.$store.state.beers.find((d) => d.beerName === name);
+      const beer = this.GET_BEERS.find((d) => d.beerName === name);
       return beer.beerId;
     },
     saveChanges() {
       //API call to save the brewery to the database. Should probably do a put?
       if (this.postBrewery) {
-        // Create a neww brewery in the back end
-        brewerService
-          .createBrewery(this.brewery)
-          .then((response) => {
-            if (response.status === 201) {
-              alert("Brewery Create");
-              this.postBrewery = false;
-            }
-          })
-          .catch((error) => {
-            if (error.response && error.response.status === 404) {
-              alert("Brewery not Created");
-            }
-          });
+        // Create a new brewery in the back end
+        this.createBrewery(this.brewery);
+        this.postBrewery = false;
       } else {
         // update existing brewery
-        brewerService
-          .updateBrewery(this.brewery)
-          .then((response) => {
-            if (response.status === 201) {
-              alert("Brewery Create");
-            }
-          })
-          .catch((error) => {
-            if (error.response && error.response.status === 404) {
-              alert("Brewery not Created");
-            }
-          });
+        this.updateBrewery(this.brewery);
       }
       this.editing = false;
-      alert("Brewery Profile changes saved!");
     },
     cancelChanges() {
       // Reset the data to the original state
       this.editing = false;
     },
   },
-  created() {
-    // Initialize brewery data when creating element
-    // use this to call in the brewery data if there is any set to "originalBrewery"
-    // set to false so we know we arent creating a new one
-
-    brewerService
-      .getBreweryByBrewerId(this.$route.params.brewerId)
-      .then((response) => {
-        if (response.data.breweryId > 0) {
+  watch: {
+    GET_BREWERY: {
+      deep: true,
+      handler() {
+        if (this.GET_BREWERY != null) {
           this.createButton = false;
-          this.originalBrewery = response.data;
-          this.brewery = response.data;
-          this.getBeersByBrewery(response.data.breweryId);
+          this.originalBrewery = this.GET_BREWERY;
+          this.brewery = this.GET_BREWERY;
+          this.getBeersByBrewery(this.GET_BREWERY.breweryId);
         }
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          alert("no brewery found");
-        }
-      });
+      },
+    },
+  },
+  mounted() {
+    this.getBreweryByBrewerId(this.$route.params.brewerId);
   },
 };
 </script>

@@ -15,7 +15,10 @@
         class="submit"
         type="submit"
         value="Save"
-        v-on:click="createBeerReview()"
+        v-on:click.prevent="
+          createBeerReview({ beerId: GET_BEER.beerId, review: this.newReview });
+          resetForm();
+        "
       />
       <input type="button" value="Cancel" v-on:click="resetForm()" />
     </div>
@@ -23,14 +26,11 @@
 </template>
 
 <script>
-import reviewService from "../services/ReviewService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["review", "beerId"],
   data() {
     return {
-      beer: {
-        beerId: this.$store.state.beer.beerId,
-      },
       beerReviews: [],
       newReview: {
         reviewId: 0,
@@ -42,48 +42,34 @@ export default {
       },
     };
   },
-
+  computed: {
+    ...mapGetters("reviewModule", ["GET_BEER_REVIEWS"]),
+    ...mapGetters("beerModule", ["GET_BEER"]),
+  },
   methods: {
-    createBeerReview() {
-      this.newReview.beerId = this.beerId;
-      reviewService
-        .createBeerReview(this.newReview)
-        .then((response) => {
-          if (response.status === 201) {
-            this.$store.state.beerReviews.unshift(this.newReview);
-            this.averageRating();
-            this.resetForm();
-          }
-        })
-        .catch((error) => {
-          this.errorMsg = "Could not save review " + error.response.status;
-          alert(this.errorMsg);
-        });
+    ...mapActions("reviewModule", ["createBeerReview"]),
+    ...mapActions("beerModule", ["updateBeerRating"]),
+    resetForm() {
+      this.newReview = {
+        reviewId: 0,
+        rating: 0,
+        description: "",
+        breweryId: "",
+        username: this.$store.state.user.username,
+        userId: this.$store.state.user.id,
+      };
+      this.$emit("close");
+      this.averageRating();
     },
     averageRating() {
-      let sum = this.$store.state.beerReviews.reduce((currentSum, review) => {
+      this.beerReviews = this.GET_BEER_REVIEWS;
+      let sum = this.beerReviews.reduce((currentSum, review) => {
         return currentSum + review.rating;
       }, 0);
 
-      const newAverage = (sum / this.$store.state.beerReviews.length).toFixed(
-        2
-      );
-
-      this.updateAverageRating(newAverage);
-    },
-    updateAverageRating(data) {
-      this.$store.state.beer.averageRating = data;
-
-      reviewService.updateBeerReview(this.$store.state.beer).catch((error) => {
-        if (error.response && error.response.status === 500) {
-          this.errorMsg =
-            "Could not update average rating " + error.response.status;
-          alert(this.errorMsg);
-        }
-      });
-    },
-    resetForm() {
-      location.reload();
+      const newAverage = (sum / this.beerReviews.length).toFixed(2);
+      this.GET_BEER.averageRating = newAverage;
+      this.updateBeerRating(this.GET_BEER);
     },
   },
 };

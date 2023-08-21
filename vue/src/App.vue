@@ -9,28 +9,13 @@
 
 <script>
 import NavBar from "./components/NavigationComponent.vue";
-import BreweryService from "./services/BreweryService";
 
 export default {
   components: {
     NavBar,
   },
-  methods: {
-    getBreweries() {
-      BreweryService.getBreweries()
-        .then((response) => {
-          this.$store.commit("SET_BREWERY_ARRAY", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.reponse.status === 404) {
-            alert("Brewery Not Available");
-          }
-        });
-    },
-  },
-  created() {
-    this.getBreweries();
-  },
+  methods: {},
+  created() {},
 };
 </script>
 
