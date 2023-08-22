@@ -68,7 +68,7 @@
 
 <script>
 import authService from "../services/AuthService";
-
+import { mapMutations } from "vuex";
 export default {
   name: "RegisterView",
   data() {
@@ -85,6 +85,11 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("userModule", [
+      "SET_LOGIN_MODAL",
+      "SET_REGISTER_MODAL",
+      "SET_REGISTRATION",
+    ]),
     register() {
       this.user.username = this.user.username.toLowerCase();
       if (this.user.password != this.user.confirmPassword) {
@@ -95,9 +100,9 @@ export default {
           .register(this.user)
           .then((response) => {
             if (response.status == 201) {
-              this.$store.commit("SET_REGISTRATION");
+              this.SET_REGISTRATION();
               this.$emit("close");
-              this.$store.commit("SET_LOGIN_MODAL");
+              this.SET_LOGIN_MODAL();
             }
           })
           .catch((error) => {
@@ -114,8 +119,8 @@ export default {
       this.registrationErrorMsg = "There were problems registering this user.";
     },
     goToLogin() {
+      this.SET_LOGIN_MODAL();
       this.$emit("close");
-      this.$store.commit("SET_LOGIN_MODAL");
     },
   },
 };

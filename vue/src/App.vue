@@ -9,13 +9,17 @@
 
 <script>
 import NavBar from "./components/NavigationComponent.vue";
-
+import { mapMutations } from "vuex";
 export default {
   components: {
     NavBar,
   },
-  methods: {},
-  created() {},
+  methods: {
+    ...mapMutations("userModule", ["SET_IS_AUTHENTICATED"]),
+  },
+  created() {
+    this.SET_IS_AUTHENTICATED();
+  },
 };
 </script>
 

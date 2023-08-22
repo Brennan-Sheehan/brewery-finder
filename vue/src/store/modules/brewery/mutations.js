@@ -11,7 +11,13 @@ export const ADD_LIKED_BREWERY = (state, data) => {
 };
 export const SET_LIKE_BREWERIES = (state, liked) => {
   liked.forEach((brewery) => {
-    state.likedBreweries.unshift(brewery);
+    if (
+      !state.likedBreweries.some(
+        (likedBrewery) => likedBrewery.id === brewery.id
+      )
+    ) {
+      state.likedBreweries.unshift(brewery);
+    }
   });
 };
 

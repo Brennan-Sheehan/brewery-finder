@@ -68,13 +68,14 @@ export default {
     return {
       liked: {
         breweryId: this.card.breweryId,
-        userId: this.$store.state.user.id,
+        userId: this.GET_USER_ID,
       },
       userLiked: {},
     };
   },
   computed: {
     ...mapGetters("breweryModule", ["GET_LIKED_BREWERIES"]),
+    ...mapGetters("userModule", ["GET_USER_ID"]),
     isLiked() {
       let likedBrewery = this.GET_LIKED_BREWERIES.find((brewery) => {
         if (brewery.breweryId == this.card.breweryId) {
@@ -96,13 +97,13 @@ export default {
       if (!isLiked) {
         this.addLikedBrewery({
           breweryId: this.card.breweryId,
-          userId: this.$store.state.user.id,
+          userId: this.GET_USER_ID,
           brewery: this.card,
         });
       } else {
         this.deleteLikedBrewery({
           breweryId: this.card.breweryId,
-          userId: this.$store.state.user.id,
+          userId: this.GET_USER_ID,
         });
       }
     },

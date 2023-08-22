@@ -37,14 +37,19 @@ export default {
         rating: 0,
         description: "",
         breweryId: "",
-        username: this.$store.state.user.username,
-        userId: this.$store.state.user.id,
+        username: this.GET_USER_USERNAME,
+        userId: this.GET_USER_ID,
       },
     };
   },
   computed: {
     ...mapGetters("reviewModule", ["GET_BEER_REVIEWS"]),
     ...mapGetters("beerModule", ["GET_BEER"]),
+    ...mapGetters("userModule", [
+      "GET_USER",
+      "GET_USER_ID",
+      "GET_USER_USERNAME",
+    ]),
   },
   methods: {
     ...mapActions("reviewModule", ["createBeerReview"]),
@@ -55,11 +60,13 @@ export default {
         rating: 0,
         description: "",
         breweryId: "",
-        username: this.$store.state.user.username,
-        userId: this.$store.state.user.id,
+        username: "",
+        userId: "",
       };
       this.$emit("close");
       this.averageRating();
+      this.newReview.userId = this.GET_USER_ID;
+      this.newReview.username = this.GET_USER_USERNAME;
     },
     averageRating() {
       this.beerReviews = this.GET_BEER_REVIEWS;
@@ -71,6 +78,10 @@ export default {
       this.GET_BEER.averageRating = newAverage;
       this.updateBeerRating(this.GET_BEER);
     },
+  },
+  mounted() {
+    this.newReview.userId = this.GET_USER_ID;
+    this.newReview.username = this.GET_USER_USERNAME;
   },
 };
 </script>

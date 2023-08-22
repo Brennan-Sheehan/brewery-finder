@@ -19,9 +19,7 @@ export default {
     review,
   },
   data() {
-    return {
-      beerReviews: this.$store.state.beerReviews,
-    };
+    return {};
   },
   computed: {
     ...mapGetters("reviewModule", ["GET_BEER_REVIEWS"]),

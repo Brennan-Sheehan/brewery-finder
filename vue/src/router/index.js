@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import Home from "../views/HomeView.vue";
 import Login from "../views/LoginView.vue";
 import Logout from "../views/LogoutView.vue";
@@ -124,7 +123,7 @@ router.beforeEach((to, from, next) => {
 
   // If it does and they are not logged in, send the user to "/login"
   if (requiresAuth && store.state.token === "") {
-    store.commit("SET_LOGIN_MODAL");
+    store.commit("userModule/SET_LOGIN_MODAL");
     next();
   } else {
     // Else let them go to their next destination

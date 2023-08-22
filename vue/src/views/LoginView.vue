@@ -8,6 +8,9 @@
           </div>
           <div class="modal-body">
             <div id="login">
+              <div class="loading" v-if="this.isLoading">
+                <img src="../assets/beer_loader.gif" />
+              </div>
               <form @submit.prevent="login">
                 <h1>Please Sign In</h1>
                 <div class="alert" role="alert" v-if="invalidCredentials">
@@ -63,12 +66,13 @@
 
 <script>
 import authService from "../services/AuthService";
-
+import { mapMutations } from "vuex";
 export default {
   name: "LoginView",
   components: {},
   data() {
     return {
+      isLoading: false,
       user: {
         username: "",
         password: "",
@@ -77,15 +81,23 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("userModule", [
+      "SET_REGISTER_MODAL",
+      "SET_AUTH_TOKEN",
+      "SET_USER",
+    ]),
     login() {
       this.user.username = this.user.username.toLowerCase();
       authService
         .login(this.user)
         .then((response) => {
           if (response.status == 200) {
-            this.$store.commit("SET_AUTH_TOKEN", response.data.token);
-            this.$store.commit("SET_USER", response.data.user);
-            this.$emit("close");
+            this.isLoading = true;
+            setTimeout(() => {
+              this.SET_AUTH_TOKEN(response.data.token);
+              this.SET_USER(response.data.user);
+              this.$emit("close");
+            }, 2000);
           }
         })
         .catch((error) => {
@@ -97,14 +109,31 @@ export default {
         });
     },
     goToRegister() {
+      this.SET_REGISTER_MODAL();
       this.$emit("close");
-      this.$store.commit("SET_REGISTER_MODAL");
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   },
 };
 </script>
 
 <style scoped>
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  background-color: rgba(15, 65, 58, 0.87);
+}
 .form-input-group {
   display: flex;
   flex-direction: column;

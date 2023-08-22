@@ -6,6 +6,9 @@
           <div class="modal-header">
             <h1 class="title logoutbtn">Log Out</h1>
           </div>
+          <div class="loading" v-if="isLoading">
+            <img src="../assets/beer_loader.gif" />
+          </div>
 
           <div class="modal-footer">
             <input
@@ -28,18 +31,46 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "LogoutView",
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   methods: {
+    ...mapMutations("userModule", ["LOGOUT", "SET_IS_AUTHENTICATED"]),
     logout() {
-      this.$store.commit("LOGOUT");
-      this.$emit("close");
+      this.isLoading = true;
+      setTimeout(() => {
+        this.LOGOUT();
+        this.$emit("close");
+      }, 2000);
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   },
 };
 </script>
 
 <style scoped>
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  background-color: rgba(15, 65, 58, 0.87);
+}
 .form-input-group {
   display: flex;
   flex-direction: column;

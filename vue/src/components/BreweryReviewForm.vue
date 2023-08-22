@@ -48,32 +48,39 @@ export default {
         reviewId: "",
         rating: 0,
         description: "",
-        userId: this.$store.state.user.id,
-        breweryId: this.breweryId,
+        userId: this.GET_USER_ID,
+        breweryId: this.$route.params.breweryId,
         beerId: 0,
-        username: this.$store.state.user.username,
+        username: this.GET_USER_USERNAME,
       },
     };
   },
   computed: {
     ...mapGetters("reviewModule", ["GET_BREWERY_REVIEWS"]),
     ...mapGetters("breweryModule", ["GET_BREWERY"]),
+    ...mapGetters("userModule", [
+      "GET_USER",
+      "GET_USER_ID",
+      "GET_USER_USERNAME",
+    ]),
   },
   methods: {
     ...mapActions("reviewModule", ["createBreweryReview"]),
     ...mapActions("breweryModule", ["updateBreweryRating"]),
     resetForm() {
       this.newReview = {
-        reviewId: "",
+        reviewId: 0,
         rating: 0,
         description: "",
-        userId: this.$store.state.user.id,
-        breweryId: this.breweryId,
+        userId: "",
+        breweryId: this.$route.params.breweryId,
         beerId: 0,
-        username: this.$store.state.user.username,
+        username: "",
       };
       this.$emit("close");
       this.averageRating();
+      this.newReview.userId = this.GET_USER_ID;
+      this.newReview.username = this.GET_USER_USERNAME;
     },
     averageRating() {
       this.breweryReviews = this.GET_BREWERY_REVIEWS;
@@ -87,6 +94,10 @@ export default {
       this.GET_BREWERY.averageRating = newAverage;
       this.updateBreweryRating(this.GET_BREWERY);
     },
+  },
+  mounted() {
+    this.newReview.userId = this.GET_USER_ID;
+    this.newReview.username = this.GET_USER_USERNAME;
   },
 };
 </script>

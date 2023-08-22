@@ -56,9 +56,7 @@
           </div>
 
           <div class="rating">
-            <div class="brewery-rating">
-              {{ GET_BREWERY.averageRating }}
-            </div>
+            <div class="brewery-rating"></div>
           </div>
           <div class="rating">
             <div class="brewery-rating"></div>
@@ -95,7 +93,6 @@
 
 <script>
 import BeerCard from "../components/BeerCard.vue";
-import beerService from "../services/BeerService";
 import breweryReviewForm from "./BreweryReviewForm.vue";
 import BreweryReview from "../components/BreweryReviewList.vue";
 import WebDisplay from "./WebDisplay.vue";
@@ -127,6 +124,7 @@ export default {
   computed: {
     ...mapGetters("breweryModule", ["GET_BREWERY"]),
     ...mapGetters("beerModule", ["GET_BEERS"]),
+    ...mapGetters("userModule", ["GET_USER"]),
   },
 
   methods: {
@@ -148,37 +146,27 @@ export default {
       this.$refs.content.scrollLeft = this.contentScrollLeft;
     },
     breweryUrl() {
-      let stringArray = this.GET_BREWERY.address.split(", ");
-      // now have 3 strings
-      let address = stringArray[0];
-      this.ADDRESS = address.replaceAll(" ", "-");
+      setTimeout(() => {
+        let stringArray = this.GET_BREWERY.address.split(", ");
+        // now have 3 strings
+        let address = stringArray[0];
+        this.ADDRESS = address.replaceAll(" ", "-");
 
-      let city = stringArray[1];
-      this.CITY = city.replaceAll(" ", "-");
+        let city = stringArray[1];
+        this.CITY = city.replaceAll(" ", "-");
 
-      let stateZip = stringArray[2];
-      this.STATE = stateZip.split(" ")[0];
-      this.ZIPCODE = stateZip.split(" ")[1];
+        let stateZip = stringArray[2];
+        this.STATE = stateZip.split(" ")[0];
+        this.ZIPCODE = stateZip.split(" ")[1];
 
-      this.url = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDAr-1vasBNPlrlbWwgbW4tP8_sqQFva8c&q=${this.STATE}+${this.CITY}+${this.ZIPCODE}+${this.ADDRESS}`;
+        this.url = `https://www.google.com/maps/embed/v1/place?key=AIzaSyDAr-1vasBNPlrlbWwgbW4tP8_sqQFva8c&q=${this.STATE}+${this.CITY}+${this.ZIPCODE}+${this.ADDRESS}`;
 
-      return null;
+        return null;
+      }, 1000);
     },
   },
   updated() {
     this.breweryUrl();
-  },
-  created() {
-    this.$store.state.userLiked = [];
-    beerService.getLikedBeers(this.$store.state.user).then((response) => {
-      response.data.forEach((element) => {
-        this.userLiked.userId = this.$store.state.user.id;
-        this.userLiked.beerId = element.beerId;
-
-        this.$store.commit("SET_USER_LIKED", this.userLiked);
-        this.userLiked = {};
-      });
-    });
   },
   mounted() {
     this.getBreweryById(this.$route.params.breweryId);

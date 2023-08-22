@@ -27,35 +27,35 @@
             More Breweries
           </router-link>
         </li>
-        <li v-if="isLoggedIn">
+        <li v-if="isAuthenticated">
           <button
             class="logout-modal"
-            @click="logoutModalStatus(), resetToggle()"
+            @click="SET_LOGOUT_MODAL(), resetToggle()"
           >
             Logout
           </button>
         </li>
-        <li v-if="isLoggedInAsBrewer">
+        <li v-if="isBrewer">
           <router-link
             @click="resetToggle()"
             :to="{
               name: 'brewer',
-              params: { brewerId: this.$store.state.user.id },
+              params: { brewerId: GET_USER_ID },
             }"
             >Brewery
           </router-link>
         </li>
-        <li v-if="isLoggedIn">
+        <li v-if="isAuthenticated">
           <router-link
             @click="resetToggle()"
             :to="{
               name: 'userPage',
-              params: { userId: this.$store.state.user.id },
+              params: { userId: GET_USER_ID },
             }"
             >Profile
           </router-link>
         </li>
-        <li v-if="isLoggedInAsManager">
+        <li v-if="isManager">
           <router-link
             @click="resetToggle()"
             :to="{
@@ -64,39 +64,27 @@
             >Manager
           </router-link>
         </li>
-        <li v-if="!isLoggedIn">
-          <button
-            class="login-modal"
-            @click="loginModalStatus(), resetToggle()"
-          >
+        <li v-if="!isAuthenticated">
+          <button class="login-modal" @click="SET_LOGIN_MODAL(), resetToggle()">
             Login
           </button>
         </li>
-        <li v-if="!isLoggedIn">
+        <li v-if="!isAuthenticated">
           <button
             class="register-modal"
-            @click="registerModalStatus(), resetToggle()"
+            @click="SET_REGISTER_MODAL(), resetToggle()"
           >
             Register
           </button>
         </li>
       </ul>
-      <login-modal
-        v-if="this.$store.state.showLoginModal"
-        @close="signinModalClose"
-      >
+      <login-modal v-if="GET_LOGIN_MODAL" @close="signinModalClose">
         <template v-slot:body> Hello, modal! </template>
       </login-modal>
-      <register-modal
-        v-if="this.$store.state.showRegisterModal"
-        @close="registerModalClose"
-      >
+      <register-modal v-if="GET_REGISTER_MODAL" @close="registerModalClose">
         <template v-slot:body> Hello, modal! </template>
       </register-modal>
-      <logout-modal
-        v-if="this.$store.state.showLogoutModal"
-        @close="logoutModalClose"
-      >
+      <logout-modal v-if="GET_LOGOUT_MODAL" @close="logoutModalClose">
         <template v-slot:body> Hello, modal! </template>
       </logout-modal>
     </section>
@@ -107,15 +95,15 @@
 import loginModal from "../views/LoginView.vue";
 import registerModal from "../views/RegisterView.vue";
 import logoutModal from "../views/LogoutView.vue";
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "NavigationComponent",
   data() {
     return {
+      brewer: false,
+      manager: false,
       checkbox: false,
-      isBrewer: false,
-      showLoginModal: false,
-
-      showLogoutModal: false,
       view: {
         topOfPage: true,
       },
@@ -130,19 +118,17 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   computed: {
+    ...mapGetters("userModule", [
+      "isAuthenticated",
+      "isBrewer",
+      "isManager",
+      "GET_REGISTER_MODAL",
+      "GET_LOGIN_MODAL",
+      "GET_LOGOUT_MODAL",
+      "GET_USER_ID",
+    ]),
     getCurrentRoute() {
       return this.$route.path;
-    },
-
-    isLoggedIn() {
-      return this.$store.getters.isAuthenticated;
-    },
-
-    isLoggedInAsBrewer() {
-      return this.$store.getters.isBrewer;
-    },
-    isLoggedInAsManager() {
-      return this.$store.getters.isManager;
     },
     navBarColor() {
       if (this.$route.path.match("/beers/")) {
@@ -156,40 +142,55 @@ export default {
       }
     },
   },
+  // watch: {
+  //   isBrewer: {
+  //     deep: true,
+  //     handler() {
+  //       this.brewer = this.isBrewer;
+  //     },
+  //   },
+  //   isManager: {
+  //     deep: true,
+  //     handler() {
+  //       this.manager = this.isManager;
+  //     },
+  //   },
+  // },
   methods: {
+    ...mapMutations("userModule", [
+      "SET_LOGIN_MODAL",
+      "SET_REGISTER_MODAL",
+      "SET_LOGOUT_MODAL",
+      "SET_REGISTRATION",
+      "SET_IS_AUTHENTICATED",
+      "SET_MANAGER",
+      "SET_BREWER",
+    ]),
     handleScroll() {
-      if (window.pageYOffset > 100) {
+      if (window.scrollY > 100) {
         if (this.view.topOfPage) this.view.topOfPage = false;
       } else {
         if (!this.view.topOfPage) this.view.topOfPage = true;
       }
     },
-    loginModalStatus() {
-      this.$store.commit("SET_LOGIN_MODAL");
-    },
-    registerModalStatus() {
-      this.$store.commit("SET_REGISTER_MODAL");
-    },
-    logoutModalStatus() {
-      this.$store.commit("SET_LOGOUT_MODAL");
-    },
     signinModalClose() {
       if (this.getCurrentRoute !== "/") {
         this.$router.push({ name: "home" });
       }
-      this.$store.commit("SET_LOGIN_MODAL");
+      this.SET_IS_AUTHENTICATED();
+      this.SET_LOGIN_MODAL();
     },
     logoutModalClose() {
       if (this.getCurrentRoute !== "/") {
         this.$router.push({ name: "home" });
       }
-      this.$store.commit("SET_LOGOUT_MODAL");
+      this.SET_LOGOUT_MODAL();
     },
     registerModalClose() {
       if (this.getCurrentRoute !== "/") {
         this.$router.push({ name: "home" });
       }
-      this.$store.commit("SET_REGISTER_MODAL");
+      this.SET_REGISTER_MODAL();
     },
     resetToggle() {
       const menu = document.getElementById("main");

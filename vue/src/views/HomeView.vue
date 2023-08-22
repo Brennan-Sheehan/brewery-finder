@@ -53,6 +53,7 @@ export default {
   },
   computed: {
     ...mapGetters("breweryModule", ["GET_BREWERIES"]),
+    ...mapGetters("userModule", ["GET_USER"]),
 
     visibleBreweries() {
       return this.filteredBreweries.length > 0
@@ -77,9 +78,8 @@ export default {
   },
   mounted() {
     this.getBreweries();
-    this.getBeers();
-    this.getLikedBeers(this.$store.state.user);
-    this.getLikedBreweries(this.$store.state.user);
+    this.getLikedBeers(this.GET_USER);
+    this.getLikedBreweries(this.GET_USER);
   },
 };
 </script>

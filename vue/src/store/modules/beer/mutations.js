@@ -15,7 +15,9 @@ export const ADD_LIKED_BEER = (state, data) => {
 };
 export const SET_LIKE_BEERS = (state, liked) => {
   liked.forEach((beer) => {
-    state.likedBeers.unshift(beer);
+    if (!state.likedBeers.some((likedBeer) => likedBeer.id === beer.id)) {
+      state.likedBeers.unshift(beer);
+    }
   });
 };
 export const DELETE_LIKE_BEERS = (state, beerId) => {

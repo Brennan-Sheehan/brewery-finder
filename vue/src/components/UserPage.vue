@@ -1,7 +1,7 @@
 <template>
   <div class="user-page">
     <div class="welcome">
-      <h1>WELCOME, {{ user.username.toUpperCase() }}!</h1>
+      <h1>WELCOME, {{ this.GET_USER.username.toUpperCase() }}!</h1>
       <div class="description">
         <h3>
           Below you can view all of your favorite Beers and Breweries. Cheers,
@@ -47,21 +47,22 @@
 import BreweryCard from "../components/BreweryCard.vue";
 import BeerCard from "../components/BeerCard.vue";
 
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   components: { BreweryCard, BeerCard },
   data() {
     return {
-      user: this.$store.state.user,
+      user: this.GET_USER,
       search: "",
       filteredBreweries: [],
       filteredBeers: [],
     };
   },
   computed: {
-    ...mapGetters("breweryModule", ["GET_LIKED_BREWERIES", "GET_BREWERIES"]),
-    ...mapGetters("beerModule", ["GET_LIKED_BEERS", "GET_BEERS"]),
+    ...mapGetters("breweryModule", ["GET_LIKED_BREWERIES"]),
+    ...mapGetters("beerModule", ["GET_LIKED_BEERS"]),
+    ...mapGetters("userModule", ["GET_USER"]),
 
     visibleBreweries() {
       return this.filteredBreweries.length > 0
@@ -80,8 +81,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions("breweryModule", ["getLikedBreweries"]),
-    ...mapActions("beerModule", ["getLikedBeers"]),
     applyFilter() {
       const search = this.search.toLowerCase();
       this.filteredBreweries = this.breweries.filter((brewery) => {
