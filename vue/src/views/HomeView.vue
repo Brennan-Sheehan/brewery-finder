@@ -78,8 +78,10 @@ export default {
   },
   mounted() {
     this.getBreweries();
-    this.getLikedBeers(this.GET_USER);
-    this.getLikedBreweries(this.GET_USER);
+    if (this.GET_USER) {
+      this.getLikedBeers(this.GET_USER);
+      this.getLikedBreweries(this.GET_USER);
+    }
   },
 };
 </script>

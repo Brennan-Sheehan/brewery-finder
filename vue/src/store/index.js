@@ -7,6 +7,7 @@ import breweryModule from "./modules/brewery";
 import beerModule from "./modules/beer";
 import reviewModule from "./modules/reviews";
 import userModule from "./modules/user";
+import managerModule from "./modules/manager";
 
 /*
  * The authorization header is set for axios when you login but what happens when you come back or
@@ -29,5 +30,6 @@ export default createStore({
     beerModule,
     reviewModule,
     userModule,
+    managerModule,
   },
 });

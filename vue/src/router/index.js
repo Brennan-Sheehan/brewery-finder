@@ -123,7 +123,8 @@ router.beforeEach((to, from, next) => {
 
   // If it does and they are not logged in, send the user to "/login"
   if (requiresAuth && store.state.token === "") {
-    store.commit("userModule/SET_LOGIN_MODAL");
+    console.log("why are you here");
+    store.commit("userModule/SET_LOGIN_MODAL(true)");
     next();
   } else {
     // Else let them go to their next destination

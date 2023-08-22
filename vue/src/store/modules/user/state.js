@@ -9,9 +9,7 @@ if (currentToken != null) {
 
 export default {
   token: currentToken || "",
-  user: currentUser || {
-    userId: 0,
-  },
+  user: currentUser || "",
   showLoginModal: false,
   showRegisterModal: false,
   showLogoutModal: false,

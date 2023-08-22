@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   props: ["card"],
@@ -100,9 +100,11 @@ export default {
   },
   methods: {
     ...mapActions("beerModule", ["addLikedBeer", "deleteLikedBeer"]),
-
+    ...mapMutations("userModule", ["SET_LOGIN_MODAL"]),
     toggleLike(isLiked) {
-      if (!isLiked) {
+      if (this.GET_USER_ID == null) {
+        this.SET_LOGIN_MODAL(true);
+      } else if (!isLiked) {
         this.addLikedBeer({
           beerId: this.card.beerId,
           userId: this.GET_USER_ID,
