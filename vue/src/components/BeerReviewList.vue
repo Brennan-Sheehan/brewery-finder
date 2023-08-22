@@ -1,65 +1,37 @@
 <template>
   <div>
-  
-      <review v-for="review in reviewGetter" :key="review.id" :review="review"/>
-     
-    
+    <review
+      v-for="review in GET_BEER_REVIEWS"
+      :key="review.id"
+      :review="review"
+    />
   </div>
 </template>
 
 <script>
-import reviewService from "../services/ReviewService.js";
+import { mapActions, mapGetters } from "vuex";
 
-import review from "./Review.vue"
+import review from "./ReviewComponent.vue";
 export default {
+  name: "BeerReviewList",
   props: ["brewery"],
   components: {
     review,
-   
   },
   data() {
-    return {
-      beerReviews: this.$store.state.beerReviews,
-   
-    };
+    return {};
   },
   computed: {
-    reviewGetter() {
-      return this.$store.state.beerReviews;
-    },
+    ...mapGetters("reviewModule", ["GET_BEER_REVIEWS"]),
   },
-  watch: {
-    reviewGetter: {
-      deep: true,
-      handler: function (newReview) {
-        this.beerReviews = newReview;
-      },
-    },
-  },
-  methods: {
-    getBeerReviews() {
-        reviewService
-          .listReviewsByBeerId(this.$route.params.beerId)
-          .then((response) => {
-            this.$store.commit("SET_BEER_REVIEWS_ARRAY", response.data);
-          })
-          .catch((error) => {
-            if (error.response && error.response.status === 404) {
-              alert("No Reviews for this beer");
-            }
-          });
-      },
 
-  
-    
+  methods: {
+    ...mapActions("reviewModule", ["getBeerReviews"]),
   },
-  created() {
-      this.getBeerReviews();   
-       
-  }
+  mounted() {
+    this.getBeerReviews(this.$route.params.beerId);
+  },
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

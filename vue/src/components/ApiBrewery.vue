@@ -1,19 +1,19 @@
 <template>
   <div class="apibrewery">
     <div class="brewery-header-container">
-      <img src="../assets/beerBuddiesLogo.png" alt="bbl"  />
+      <img src="../assets/beerBuddiesLogo.png" alt="bbl" />
       <div class="brewery-details-container">
         <div class="brewery-details">
-          <h1 class="brewery-name"> {{ apiBrewery.breweryName }} </h1>
+          <h1 class="brewery-name">{{ GET_API_BREWERY.breweryName }}</h1>
           <div class="contact">
             <div class="brewery-contact-info">
               <div>
-                {{ apiBrewery.phoneNumber }}
+                {{ GET_API_BREWERY.phoneNumber }}
               </div>
-              {{ apiBrewery.address }}
+              {{ GET_API_BREWERY.address }}
             </div>
             <div class="brewery-store-hours">
-              {{ apiBrewery.operatingHours }}
+              {{ GET_API_BREWERY.operatingHours }}
             </div>
           </div>
         </div>
@@ -23,7 +23,7 @@
     <div class="bottom-container">
       <div class="beer-container">
         <beer-card
-          v-for="card in beers"
+          v-for="card in GET_BEERS"
           v-bind:key="card.beerId"
           v-bind:card="card"
         />
@@ -31,35 +31,35 @@
       <main>
         <div class="left-column">
           <div class="map-container">Possible Map</div>
-          <div class="lower-contact"> 
-            <div class="lower-address">{{ apiBrewery.address }}</div>
+          <div class="lower-contact">
+            <div class="lower-address">{{ GET_API_BREWERY.address }}</div>
             <div class="lower-phone">phone</div>
-            <div class="lower-emailAddress">{{ apiBrewery.emailAddress }}</div>
-            <div class="lower-hours">{{ apiBrewery.operatingHours }}</div>
+            <div class="lower-emailAddress">
+              {{ GET_API_BREWERY.emailAddress }}
+            </div>
+            <div class="lower-hours">{{ GET_API_BREWERY.operatingHours }}</div>
           </div>
         </div>
         <div class="right-column">
           <div class="brewery-description">
             <h2>Brewery Description</h2>
-            {{ apiBrewery.breweryHistory }}
+            {{ GET_API_BREWERY.breweryHistory }}
           </div>
         </div>
       </main>
     </div>
-    
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import BeerCard from "../components/BeerCard.vue";
-import beerService from "../services/BeerService";
 
 export default {
   name: "apiBrewery",
   props: ["apiCard"],
   data() {
     return {
-      apiBrewery: this.$store.state.apiBrewery,
       showForm: false,
     };
   },
@@ -67,39 +67,23 @@ export default {
     BeerCard,
   },
   computed: {
+    ...mapGetters("breweryModule", ["GET_API_BREWERY"]),
+    ...mapGetters("beerModule", ["GET_BEERS"]),
     beers() {
       return this.$store.state.beers;
     },
     apiBreweryGetter() {
       return this.$store.state.apiBrewery;
-    }
-  },
-  watch: {
-    apibreweryGetter: {
-      deep: true,
-      handler: function (newApiBrewery) {
-        this.apiBrewery = newApiBrewery;
-      },
     },
   },
+
   methods: {
-    getBeers() {
-      beerService
-        .getBeersByBreweryId(this.$route.params.breweryId)
-        .then((response) => {
-          this.$store.commit("SET_BEERS_ARRAY", response.data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            alert("Beer Not Available");
-          }
-        });
-      this.$store.dispatch('getApiBrewery', this.$route.params.breweryId)
-    },
+    ...mapActions("beerModule", ["getBeersByBrewery"]),
+    ...mapActions("breweryModule", ["getApiBrewery"]),
   },
-   created() {
-    this.getBeers();
-    
+  created() {
+    this.getApiBrewery(this.$route.params.breweryId);
+    this.getBeersByBrewery(this.$route.params.breweryId);
   },
 };
 </script>
@@ -173,34 +157,29 @@ img {
   font-size: 15px;
 }
 
-.bottom-container{
+.bottom-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.map-container{
+.map-container {
   margin-bottom: 2rem;
 }
 
-.lower-contact{
-  color: rgba(241,79,41,255);
-
+.lower-contact {
+  color: rgba(241, 79, 41, 255);
 }
 .lower-address {
   margin-bottom: 1rem;
-
 }
 .lower-phone {
   margin-bottom: 1rem;
-
 }
 .lower-emailAddress {
   margin-bottom: 1rem;
-
 }
 .lower-hours {
   margin-bottom: 1rem;
-
 }
 .brewery-description-content {
   font-size: 1rem;
@@ -215,6 +194,5 @@ main {
   max-width: 1000px;
   width: max-content;
   justify-content: center;
-  
 }
 </style>

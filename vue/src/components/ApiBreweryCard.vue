@@ -2,8 +2,7 @@
   <div class="main-api-brewery-card">
     <router-link
       :to="{ name: 'api-brewery', params: { breweryId: apiCard.breweryId } }"
-
-    > 
+    >
       <div class="card-container">
         <img
           :src="apiCard.breweryImage"
@@ -34,29 +33,32 @@
 
 <script>
 export default {
+  name: "ApiBreweryCard",
   props: ["apiCard"],
 };
 </script>
 
 <style scoped>
-.main-brewery-card {
+.main-api-brewery-card {
   box-shadow: 1rem 1rem 4rem rgba(71, 74, 95, 0.623);
   border-radius: 4px;
   overflow: hidden;
+  height: 200px;
+  width: 350px;
 }
 .card-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: rgba(36, 36, 36, 0.479); 
+  justify-content: space-between;
+  background: rgba(36, 36, 36, 0.479);
   overflow: hidden;
   position: relative;
-  
+  height: 100%;
+  width: 100%;
 }
 img {
   object-fit: cover;
-  z-index: -1; 
+  z-index: -1;
 }
 
 .card-info {
@@ -65,11 +67,9 @@ img {
   align-items: center;
   position: absolute;
   padding: 0.625rem;
-  color: rgba(241,241,241,255);
+  color: rgba(241, 241, 241, 255);
   font-size: 16px;
   overflow: auto;
- 
-  
 }
 
 .rating {
@@ -101,7 +101,6 @@ img {
   margin-top: 0.3rem;
   margin-left: 3rem;
   margin-bottom: 0.3rem;
-  
 }
 .icon-star-empty {
   margin-right: 5px;

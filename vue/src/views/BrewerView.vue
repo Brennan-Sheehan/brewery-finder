@@ -1,18 +1,16 @@
 <template>
   <div>
-      <BrewerPage/>
+    <BrewerPage />
   </div>
 </template>
 
 <script>
-import BrewerPage from '../components/Brewer.vue'
+import BrewerPage from "../components/BrewerComponent.vue";
 export default {
-    components: {
-        BrewerPage
-    }
-}
+  components: {
+    BrewerPage,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,8 +1,6 @@
 <template>
   <form>
-  
     <div>
-   
       <textarea v-model="newReview.description" placeholder="Review"></textarea>
     </div>
     <select id="rating" v-model.number="newReview.rating" placeholeder="Rating">
@@ -17,7 +15,10 @@
         class="submit"
         type="submit"
         value="Save"
-        v-on:click="createBeerReview()"
+        v-on:click.prevent="
+          createBeerReview({ beerId: GET_BEER.beerId, review: this.newReview });
+          resetForm();
+        "
       />
       <input type="button" value="Cancel" v-on:click="resetForm()" />
     </div>
@@ -25,89 +26,62 @@
 </template>
 
 <script>
-import reviewService from "../services/ReviewService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["review", "beerId"],
   data() {
-  
     return {
-      
-      beer:{
-        beerId: this.$store.state.beer.beerId
-      },
-      beerReviews:[],
+      beerReviews: [],
       newReview: {
         reviewId: 0,
         rating: 0,
         description: "",
         breweryId: "",
-        username: this.$store.state.user.username,
-        userId: this.$store.state.user.id,
+        username: this.GET_USER_USERNAME,
+        userId: this.GET_USER_ID,
       },
     };
-    
   },
- 
+  computed: {
+    ...mapGetters("reviewModule", ["GET_BEER_REVIEWS"]),
+    ...mapGetters("beerModule", ["GET_BEER"]),
+    ...mapGetters("userModule", [
+      "GET_USER",
+      "GET_USER_ID",
+      "GET_USER_USERNAME",
+    ]),
+  },
   methods: {
-    createBeerReview() {
-      this.newReview.beerId = this.beerId;
-      reviewService
-        .createBeerReview(this.newReview)
-        .then((response) => {
-          if (response.status === 201) {
-            console.log(this.averageRating);
-          
-    this.$store.state.beerReviews.unshift(this.newReview)
-    this.averageRating()
-    this.resetForm()
-          }
-        })
-        .catch((error) => {
-          this.errorMsg = "Could not save review " + error.response.status;
-          alert(this.errorMsg);
-        });
+    ...mapActions("reviewModule", ["createBeerReview"]),
+    ...mapActions("beerModule", ["updateBeerRating"]),
+    resetForm() {
+      this.newReview = {
+        reviewId: 0,
+        rating: 0,
+        description: "",
+        breweryId: "",
+        username: "",
+        userId: "",
+      };
+      this.$emit("close");
+      this.averageRating();
+      this.newReview.userId = this.GET_USER_ID;
+      this.newReview.username = this.GET_USER_USERNAME;
     },
     averageRating() {
-    //   if (this.$store.state.beerReviews.length<=1){
-    //     this.beer.averageRating = this.review.rating
-    // this.updateBeerRating(this.brewery.averageRating)
-    //  console.log(this.review.rating + "single rating")
-    //   }else if (this.$store.state.beerReviews.length > 1) {
-      let sum = this.$store.state.beerReviews.reduce((currentSum, review) => {
+      this.beerReviews = this.GET_BEER_REVIEWS;
+      let sum = this.beerReviews.reduce((currentSum, review) => {
         return currentSum + review.rating;
       }, 0);
 
-      const newAverage = (sum / this.$store.state.beerReviews.length).toFixed(
-        2
-      );
-console.log(newAverage)
-   console.log(this.$store.state.beerReviews)
-      this.updateAverageRating(newAverage);
-   
-      // }
+      const newAverage = (sum / this.beerReviews.length).toFixed(2);
+      this.GET_BEER.averageRating = newAverage;
+      this.updateBeerRating(this.GET_BEER);
     },
-    updateAverageRating(data) {
-      this.$store.state.beer.averageRating = data;
-      // console.log(this.$store.state.beer.averageRating + "this is average rating")
-      // console.log(this.$store.state.beer + " this.beer")
-      reviewService
-        .updateBeerReview(this.$store.state.beer)
-        .then((response) => {
-          console.log(response.data + " This is response data");
-        })
-        .catch((error) => {
-          console.log(error.message);
-
-          if (error.response && error.response.status === 500) {
-            console.log("error updating average rating");
-          }
-        });
-    },
-    resetForm() {
-   
-      location.reload();
-    
-    },
+  },
+  mounted() {
+    this.newReview.userId = this.GET_USER_ID;
+    this.newReview.username = this.GET_USER_USERNAME;
   },
 };
 </script>

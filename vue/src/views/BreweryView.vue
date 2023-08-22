@@ -1,19 +1,15 @@
 <template>
-    <div class="brewery">
-      <Brewery/>
-     
-     
-    </div>
-
+  <div class="brewery">
+    <Brewery />
+  </div>
 </template>
 
 <script>
-import Brewery from '../components/Brewery.vue'
-
+import Brewery from "../components/BreweryComponent.vue";
 
 export default {
-    components: {
-        Brewery,
-    }
-}
+  components: {
+    Brewery,
+  },
+};
 </script>

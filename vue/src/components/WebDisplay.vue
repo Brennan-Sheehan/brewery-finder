@@ -1,17 +1,22 @@
 <template>
   <div>
-      <iframe v-bind:src ="webPageUrl" frameborder="0" width="100%" height="400"></iframe>
+    <iframe
+      width="450"
+      height="450"
+      style="border: 0"
+      loading="lazy"
+      allowfullscreen
+      v-bind:src="webPageUrl"
+    ></iframe>
   </div>
 </template>
 
 <script>
 export default {
-props: {
-    webPageUrl: String
-}
-}
+  props: {
+    webPageUrl: String,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
