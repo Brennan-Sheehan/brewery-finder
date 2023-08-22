@@ -1,6 +1,27 @@
-# Final Capstone
+# Beer Buddy
 ​
-This directory contains all of the starter projects for the final capstone.
-​
-Each project contains instructions that provides information about the starting code and explains how to get started with the final capstone project.
-# brewery-finder
+Still actively developing with a team.
+
+## Currently Implemented
+1. Backend
+- Java Spring RESTful API
+- Spring Security
+
+  
+2. Front-End
+- Vue Router
+- Vuex Store with modules
+- Login and Registration
+- Adding reviews
+- Ability to like beers and breweries
+- Ability to rate beers and breweries
+- Google Map API
+- Third-party brewery API
+- 3 Roles
+    1. Beer Lover
+    2. Brewer
+    3. Manager
+- Managers can delete breweries and change users to a brewer
+- Brewers can update their brewery (Info or Beers they are selling)
+
+
