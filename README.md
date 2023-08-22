@@ -24,5 +24,7 @@ Still actively developing with a team.
 - Managers can delete breweries and change users to a brewer
 - Brewers can update their brewery (Info or Beers they are selling)
 
-![Alt text](vue/Demo Images/Beer-Page.png)
+![Alt text](./vue/Demo%20Images/Home-Page.png =250x250) ![Alt text](./vue/Demo%20Images/Login-Modal.png)
+![Alt text](./vue/Demo%20Images/Brewery-Page.png) ![Alt text](./vue/Demo%20Images/Beer-Page.png)
+![Alt text](./vue/Demo%20Images/Brewer-Page.png) ![Alt text](./vue/Demo%20Images/Manager-Page.png)
 
