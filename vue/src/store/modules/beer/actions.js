@@ -39,7 +39,6 @@ export const deleteBeerByBrewery = ({ commit }, payload) => {
 };
 
 export const getBeerById = ({ commit }, beerId) => {
-  console.log("beerid: " + beerId);
   BeerService.getBeerById(beerId)
     .then((response) => {
       commit("SET_BEER", response.data);

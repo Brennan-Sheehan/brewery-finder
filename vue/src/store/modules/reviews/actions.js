@@ -39,7 +39,6 @@ export const getBeerReviews = ({ commit }, beerId) => {
 };
 
 export const createBeerReview = ({ commit }, payload) => {
-  console.log;
   ReviewService.createBeerReview(payload)
     .then((response) => {
       if (response.status === 201) {

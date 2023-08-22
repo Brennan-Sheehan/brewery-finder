@@ -8,7 +8,6 @@ export default {
     return axios.get(`/breweries/${breweryId}/reviews`);
   },
   createBeerReview(payload) {
-    console.log(payload);
     return axios.post(`/beers/${payload.beerId}/reviews`, payload.review);
   },
   createBreweryReview(review) {
