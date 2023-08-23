@@ -39,6 +39,11 @@ export const SET_REGISTRATION = (state) => {
   state.registrationSuccess = !state.registrationSuccess;
 };
 
+/**
+ * This function checks if the user is authenticated and if they are a brewer or manager
+ *  * @param {*} state
+ */
+
 export const SET_IS_AUTHENTICATED = (state) => {
   if (state.token) {
     state.isAuthenticated = true;
