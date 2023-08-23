@@ -260,7 +260,6 @@ export default {
   color: #e7711b;
   padding: 0;
   position: absolute;
-  z-index: 1;
   display: block;
   top: 0;
   left: 0;
@@ -274,6 +273,5 @@ span {
 .empty-ratings {
   padding: 0;
   display: block;
-  z-index: 0;
 }
 </style>
