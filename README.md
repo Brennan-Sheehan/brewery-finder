@@ -21,7 +21,7 @@ Still actively developing with a team.
     1. Beer Lover
     2. Brewer
     3. Manager
-- Managers can delete breweries and change users to a brewer
+- Managers can delete breweries and change users to a brewer.
 - Brewers can update their brewery (Info or Beers they are selling)
 
 ### Home Page and Login modal
