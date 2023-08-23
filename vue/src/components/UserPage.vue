@@ -4,7 +4,7 @@
       <h1>WELCOME, {{ this.GET_USER.username.toUpperCase() }}!</h1>
       <div class="description">
         <h3>
-          Below you can view all of your favorite Beers and Breweries. Cheers,
+          Below you can view all of your favorite Breweries and Beers. Cheers,
           Beer Buddy!
         </h3>
       </div>
@@ -120,6 +120,7 @@ export default {
   display: flex;
   margin-top: 9rem;
   margin-bottom: 3rem;
+  margin-right: 15rem;
 }
 .fav-breweries {
   display: flex;
@@ -141,68 +142,60 @@ export default {
   padding-bottom: 1rem;
   align-items: space-between;
 }
-/* .welcome {
-  text-align: center;
-  margin-bottom: 1rem;
+@media screen and (max-width: 767px) {
+
+  .description {
+  display: flex;
+  margin-top: 9rem;
+  margin-bottom: 3rem;
+  margin-right: 0rem;
+  margin-left: -10rem;
+}
+  .left-section {
+  margin-right: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.116);
+  padding: 2rem;
 }
 
-.left-section,
+@media screen and (max-width: 480px) {
+  .description {
+  display: flex;
+  margin-top: 9rem;
+  margin-bottom: 3rem;
+  margin-right: 0rem;
+  margin-left: -12rem;
+}
+
+.main-page{
+  display: flex;
+  flex-direction:column;
+}
+  .left-section {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.116);
+  padding: 2rem;
+  margin-left: 1rem;
+}
+
 .right-section {
-  width: 50%;
-}
-
-.left-section {
-  width: 35%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  background-color: #f1f1f1;
+  margin-right:1rem;
+  border: 1px solid rgba(0, 0, 0, 0.116);
+  padding: 2rem;
+  margin-left: 1rem;
 }
-.right-section {
-  width: 35%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  background-color: #f1f1f1;
+.beer-container {
+  padding-bottom: 1rem;
+  align-items: space-between;
+  margin-right:1.8rem;
 }
-
-.right-section,
-.left-section {
-  height: fit-content;
-  min-height: 200px;
-  width: 90%;
-  align-self: center;
-  background-color: #f1f1f1;
-}
-
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-self: flex-end;
-  text-align: center;
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #333;
-  color: #fff;
-}
-
-.fav-breweries,
-.fav-beers {
-  padding: 5rem;
-}
-
 .brewery-container {
-  /* Add any specific styling for the brewery card container if needed */
-/* } */
-
-/* .brewery-name {
-  margin-right: 10px;
+  padding-bottom: 1rem;
+  align-items: space-between;
 }
 
-.brewery-image {
-  width: 20px;
-  height: 20px;
-} */
-
-/* Add any additional styles for your brewery-card component here */
+}
+}
 </style>

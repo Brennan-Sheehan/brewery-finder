@@ -240,12 +240,14 @@ img {
 .bottom-container {
   display: flex;
   flex-direction: column;
+  
 }
 
 .carousel {
   display: flex;
   align-items: center;
   border-radius: 10px;
+  width:80rem;
 }
 
 .material-icons-outlined {
@@ -334,5 +336,13 @@ main {
   .material-icons-outlined {
     font-size: 48px;
   }
+  @media screen and (max-width: 480px) {
+  .carousel {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  width:30rem;
+}
+}
 }
 </style>
