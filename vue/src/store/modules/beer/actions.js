@@ -1,5 +1,13 @@
-import BeerService from "@/services/BeerService";
+import BeerService from "@/services/BeerService.js";
 
+/**
+ * Get all beers by the brewery id
+ * Commit mutation to set beers array
+ *
+ * If API call can not be made or returns a 404 status code, alert the user
+ * @param {*} commit
+ * @param {number} breweryId
+ */
 export const getBeersByBrewery = ({ commit }, breweryId) => {
   BeerService.getBeersByBreweryId(breweryId)
     .then((response) => {
@@ -11,6 +19,13 @@ export const getBeersByBrewery = ({ commit }, breweryId) => {
       }
     });
 };
+
+/**
+ * Create a beer by the brewery id
+ * Commit mutation to add beer to beers array
+ * If API call can not be made or returns a 404 status code, alert the user
+ * @param {object} payload takes in the brewery id and the beer object
+ */
 export const addBeerByBrewery = ({ commit }, payload) => {
   BeerService.createBeerById(payload)
     .then((response) => {
@@ -20,7 +35,7 @@ export const addBeerByBrewery = ({ commit }, payload) => {
     })
     .catch((error) => {
       if (error.response && error.response.status === 404) {
-        alert("Beer Not Available");
+        alert("Beer Not =Created");
       }
     });
 };
