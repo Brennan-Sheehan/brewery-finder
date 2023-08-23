@@ -26,7 +26,7 @@
           <button v-on:click.prevent="showForm = true" v-else>
             Write a Review
           </button>
-          <beer-review-form v-show="showForm" />
+          <beer-review-form v-show="showForm" @close="showForm = false" />
         </div>
       </section>
       <section class="bottom-section">

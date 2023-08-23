@@ -16,8 +16,7 @@
         type="submit"
         value="Save"
         v-on:click.prevent="
-          createBeerReview({ beerId: GET_BEER.beerId, review: this.newReview });
-          resetForm();
+          createBeerReview({ beerId: GET_BEER.beerId, review: this.newReview })
         "
       />
       <input type="button" value="Cancel" v-on:click="resetForm()" />
@@ -26,7 +25,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import ReviewService from "../services/ReviewService";
 export default {
   props: ["review", "beerId"],
   data() {
@@ -54,6 +54,7 @@ export default {
   methods: {
     ...mapActions("reviewModule", ["createBeerReview"]),
     ...mapActions("beerModule", ["updateBeerRating"]),
+    ...mapMutations("reviewModule", ["ADD_BEER_REVIEW"]),
     resetForm() {
       this.newReview = {
         reviewId: 0,
@@ -64,9 +65,23 @@ export default {
         userId: "",
       };
       this.$emit("close");
-      this.averageRating();
       this.newReview.userId = this.GET_USER_ID;
       this.newReview.username = this.GET_USER_USERNAME;
+    },
+    createBeerReview(payload) {
+      ReviewService.createBeerReview(payload)
+        .then((response) => {
+          if (response.status === 201) {
+            this.ADD_BEER_REVIEW(payload.review);
+            this.averageRating();
+            this.resetForm();
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 400) {
+            alert("You have already reviewed this beer");
+          }
+        });
     },
     averageRating() {
       this.beerReviews = this.GET_BEER_REVIEWS;
