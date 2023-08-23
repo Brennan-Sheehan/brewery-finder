@@ -24,10 +24,7 @@
         <input
           type="submit"
           value="Save"
-          v-on:click.prevent="
-            createBreweryReview(this.newReview);
-            resetForm();
-          "
+          v-on:click.prevent="createBreweryReview(this.newReview)"
         />
         <input type="button" value="Cancel" v-on:click="resetForm()" />
       </div>
@@ -36,8 +33,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import ReviewService from "../services/ReviewService";
 export default {
   props: ["review", "breweryId"],
   name: "review-form",
@@ -67,6 +64,7 @@ export default {
   methods: {
     ...mapActions("reviewModule", ["createBreweryReview"]),
     ...mapActions("breweryModule", ["updateBreweryRating"]),
+    ...mapMutations("reviewModule", ["ADD_BREWERY_REVIEW"]),
     resetForm() {
       this.newReview = {
         reviewId: 0,
@@ -78,9 +76,24 @@ export default {
         username: "",
       };
       this.$emit("close");
-      this.averageRating();
+
       this.newReview.userId = this.GET_USER_ID;
       this.newReview.username = this.GET_USER_USERNAME;
+    },
+    createBreweryReview(review) {
+      ReviewService.createBreweryReview(review)
+        .then((response) => {
+          if (response.status === 201) {
+            this.ADD_BREWERY_REVIEW(review);
+            this.averageRating();
+            this.resetForm();
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 400) {
+            alert("You have already reviewed this brewery");
+          }
+        });
     },
     averageRating() {
       this.breweryReviews = this.GET_BREWERY_REVIEWS;
@@ -88,7 +101,6 @@ export default {
       let sum = this.breweryReviews.reduce((currentSum, review) => {
         return currentSum + review.rating;
       }, 0);
-
       const newAverage = (sum / this.breweryReviews.length).toFixed(2);
 
       this.GET_BREWERY.averageRating = newAverage;
