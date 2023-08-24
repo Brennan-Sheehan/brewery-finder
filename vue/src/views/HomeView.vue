@@ -16,7 +16,7 @@
             placeholder="Brewery Name or Location"
             @input="applyFilter"
           />
-          <button style="margin-left: 1rem" type="submit">Search</button>
+          <button type="submit">Search</button>
         </div>
       </div>
     </div>
@@ -118,6 +118,7 @@ img {
 
 .header-search > h4 {
   font-size: 1.5rem;
+  margin: 1rem;
   margin-top: 0rem;
   margin-bottom: 3rem;
   color: #f1f1f1;
@@ -171,13 +172,18 @@ main {
   .form {
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
     margin: 0;
     gap: 5px;
+  }
+
+  .form button {
+    margin: 0;
   }
   input,
   button {
     height: 30px;
+    margin: 0;
   }
 }
 
