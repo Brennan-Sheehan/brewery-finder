@@ -11,7 +11,7 @@
           placeholder="Brewery Name or Location"
           @input="applyFilter"
         />
-        <button style="margin-left: 1rem" type="submit">Search</button>
+        <button type="submit">Search</button>
       </div>
     </div>
     <main class="main-container">
@@ -96,8 +96,9 @@ export default {
 }
 
 .search-header > h1 {
+  margin: 0.5rem;
   margin-top: 12rem;
-  font-size: 4rem;
+  font-size: 2rem;
   color: #f1f1f1;
   text-shadow: rgba(17, 21, 20, 255) 0 3px 0;
 }
@@ -131,7 +132,8 @@ main {
 
 .form {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   font-size: 1.2em;
 }
 
@@ -141,11 +143,18 @@ button {
   border-radius: 5px;
   font-size: inherit;
   box-sizing: content-box;
-  padding: 0.2em;
-  margin: 0.1em 0.2em;
+  margin: 0.5rem;
 }
-
+input {
+  max-width: 20rem;
+}
 button {
   background: #f14f29;
+}
+
+@media (min-width: 769px) {
+  .form {
+    flex-direction: row;
+  }
 }
 </style>

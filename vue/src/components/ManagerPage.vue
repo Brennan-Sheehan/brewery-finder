@@ -262,6 +262,14 @@ th {
   td {
     padding: 10px 10px 3px 10px;
   }
+
+  form {
+    display: flex;
+    align-items: center;
+  }
+  form input {
+    margin: 0.5rem;
+  }
   .button-container {
     width: 125px;
   }
