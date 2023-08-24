@@ -237,9 +237,9 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 50px;
-  position: fixed;
   z-index: 1;
   width: 100%;
+  position:fixed;
 }
 
 .navigation-menu {
@@ -305,7 +305,10 @@ img {
     overflow: hidden;
     opacity: 1;
   }
-
+  .navigation-container{
+  position:relative;
+  background-color: #353631;
+  }
   .navigation-menu label {
     display: inline-flex;
     align-items: flex-start;
