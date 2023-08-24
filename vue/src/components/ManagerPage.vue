@@ -36,7 +36,7 @@
                 <!-- <div class="button=container" v-for="authority in user.authorities" v-bind:key="authority.name">
                             <button class="toggle-role" value="Reload Page" v-on:click="setBrewer(user.id), toggleRole(user.id)">{{ authority.name === 'ROLE_ADMIN' ? 'Make User' : 'Make Brewer'}}</button>
                             </div> -->
-                <td class="button=container">
+                <td class="button-container">
                   <button
                     class="make-brewer"
                     value="Reload Page"
@@ -87,8 +87,8 @@
             >
               <tr>
                 <td>{{ brewery.breweryName }}</td>
-                <td>{{ brewery.breweryId }}</td>
-                <td>{{ brewery.brewerId }}</td>
+                <td class="id">{{ brewery.breweryId }}</td>
+                <td class="id">{{ brewery.brewerId }}</td>
                 <td>{{ brewery.address }}</td>
                 <td>
                   <button
@@ -197,27 +197,27 @@ export default {
 .main-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 1200px;
   align-self: center;
 }
 
 .table-container {
-  padding: 20px;
+  max-width: 100%;
+  margin: 10px;
 }
 
-.data-table th,
-.data-table td {
-  padding: 10px;
+th,
+td {
   border: 1px solid #ccc;
   text-align: left;
+  color: rgba(53, 54, 49, 255);
 }
 
-.data-table th {
+th {
   color: rgba(17, 21, 20, 255);
   text-transform: uppercase;
-  border: 1px; 
-  padding: 8px;
-  text-align: center;
+  border: 1px;
 }
 
 .title {
@@ -225,19 +225,23 @@ export default {
   margin-left: 5rem;
 }
 
-.data-table td {
-  color: rgba(53, 54, 49, 255);
-}
-
 .make-brewer {
   color: rgba(17, 21, 20, 255);
-  border: 2px solid #353631;
+  border: 2px solid #35363152;
   background-color: rgba(241, 79, 41, 255);
+  width: 100%;
+  max-width: 120px;
+  margin: 2px;
+  border-radius: 3px;
 }
 
 .make-user {
   color: rgba(17, 21, 20, 255);
-  border: 2px solid #353631;
+  border: 2px solid #35363152;
+  width: 100%;
+  max-width: 120px;
+  margin: 2px;
+  border-radius: 3px;
 }
 
 .update-brewer {
@@ -251,5 +255,15 @@ export default {
 .delete-user {
   color: rgba(17, 21, 20, 255);
   border: 2px solid #353631;
+}
+
+@media (min-width: 768px) {
+  th,
+  td {
+    padding: 10px 10px 3px 10px;
+  }
+  .button-container {
+    width: 125px;
+  }
 }
 </style>
