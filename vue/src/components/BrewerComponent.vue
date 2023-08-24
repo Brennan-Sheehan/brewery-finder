@@ -19,7 +19,11 @@
           >
             Edit Brewery
           </button>
-          <button class="edit-button" v-if="editing" @click="saveChanges">
+          <button
+            class="save-button edit-button"
+            v-if="editing"
+            @click="saveChanges"
+          >
             Save Changes
           </button>
         </div>
@@ -209,34 +213,30 @@ export default {
 .brewery-profile {
   display: flex;
   justify-content: center;
-  padding-top: 100px;
   background-color: #f1f1f1;
+  width: 100%;
 }
 .title {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding-left: 20px;
 }
 .edit-button {
   border: 1px solid rgba(110, 110, 110, 0.274);
   border-radius: 5px;
   font-size: 20px;
   box-sizing: content-box;
-  padding: 0.2em;
-  margin: 0.1em 0.2em;
   background: #f14f29;
 }
 .condition {
-  max-width: 1000px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0;
 }
 .header {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-img {
   width: 100%;
 }
 
@@ -265,24 +265,27 @@ img {
   width: 100%;
 }
 .beer-list {
+  display: flex;
+  flex-direction: column;
   background-color: #f1f1f1;
-  padding: 10px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin: 0;
-  margin-bottom: 15px;
-  width: 90%;
+  margin: 20px;
+  align-items: center;
+  gap: 20px;
 }
 
 .info-field {
   background-color: #f1f1f1;
-  padding: 10px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin: 10px;
   margin-bottom: 15px;
+  margin: 20px;
+  padding: 20px;
 }
-
+span {
+  overflow-wrap: break-word;
+}
 .info-field label {
   font-weight: bold;
   margin-bottom: 5px;
@@ -290,23 +293,12 @@ img {
 }
 input {
   background-color: #f1f1f1;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin: auto;
+  border-radius: 3px;
   margin-bottom: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.171);
 }
 .info-field input {
   width: 90%;
-  padding: 10px;
-}
-
-.right-section textarea {
-  height: fit-content;
-  min-height: 200px;
-  width: 90%;
-  align-items: flex-start;
-  background-color: #f1f1f1;
 }
 
 .brewery-actions {
@@ -315,11 +307,14 @@ input {
 }
 
 .brewery-actions > button {
-  margin: 0 10px;
   padding: 10px 20px;
   color: #f1f1f1;
   border: none;
   cursor: pointer;
+}
+
+.save-button {
+  margin-left: 10px;
 }
 
 .brewery-actions > button:hover {
@@ -328,17 +323,21 @@ input {
 .add-beer {
   box-shadow: 1rem 1rem 4rem rgba(71, 74, 95, 0.623);
   border-radius: 4px;
-  width: 100%;
+  width: 90%;
   height: 60px;
-  margin: 0;
   border: none;
-  margin-bottom: 15px;
+  margin: 10px 20px 15px 20px;
 }
 .material-icons-outlined {
   width: 40px;
 }
 .beer-card {
   position: relative;
+  max-width: 300px;
+}
+
+#delete {
+  margin: 20px;
 }
 .delete-button {
   border: 1px solid rgba(110, 110, 110, 0.274);
@@ -355,41 +354,42 @@ input {
   align-items: center;
 }
 
-/* Media Queries */
-@media (min-width: 390px) {
-  .left-section,
-  .right-section {
-    width: 100%;
-  }
+.delete-form select {
+  margin: 20px;
 }
 
+textarea {
+  min-width: 300px;
+  min-height: 200px;
+}
+
+/* Media Queries */
+
 @media (min-width: 768px) {
-  .info-field {
-    width: calc(80% - 10px);
+  .brewery-profile {
+    padding-top: 90px;
   }
   #brewery-history {
-    width: 94%;
     min-height: 100px;
     margin: 0;
     margin-bottom: 30px;
+    margin-right: 20px;
+  }
+  #brewery-history.info-field textarea {
+    height: min-content;
+    width: 430px;
+    min-height: 200px;
+  }
+  .beer-list {
+    margin: 0;
   }
 
-  #brewery-image {
-    width: calc(86% - 10px);
-  }
-  img {
-    width: calc(88% - 10px);
-  }
-
-  .left-section,
-  .right-section {
-    width: 50%;
-  }
   .left-section {
     width: 35%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-top: 0;
   }
   .right-section {
     display: flex;
@@ -403,7 +403,10 @@ input {
     gap: 20px;
     flex-wrap: nowrap;
   }
-
+  .left-section .info-field {
+    margin: 0px 30px 20px 10px;
+    width: 200px;
+  }
   .body {
     flex-direction: row;
     justify-content: flex-start;
@@ -411,30 +414,43 @@ input {
     margin-right: 40px;
   }
   .add-beer {
-    height: 270px;
     width: 300px;
-    margin-bottom: 0;
+    margin: 0;
+  }
+  #brewery-image {
+    margin-left: 10px;
+  }
+  #delete {
+    margin: 0;
+    width: 484px;
   }
 }
 
 @media (min-width: 1024px) {
+  .left-section {
+    width: 50%;
+  }
+  .left-section .info-field {
+    width: 80%;
+  }
   .beer-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: initial;
+    gap: 20px;
+    margin-right: 10px;
+    justify-content: center;
+    padding: 20px;
   }
-  #brewery-history .info-field {
-    width: initial;
-    min-height: 200px;
-  }
-  #brewery-image {
-    width: calc(100% - 20px);
-  }
-  img {
+  #brewery-history input {
     width: 100%;
   }
+  #brewery-history.info-field textarea {
+    width: 730px;
+  }
 
+  .add-beer {
+    height: 280px;
+  }
   .title {
     flex-direction: row;
     justify-content: space-between;

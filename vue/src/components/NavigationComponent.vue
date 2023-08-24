@@ -305,6 +305,9 @@ img {
     overflow: hidden;
     opacity: 1;
   }
+  .navigation-container {
+    position: relative;
+  }
 
   .navigation-menu label {
     display: inline-flex;
