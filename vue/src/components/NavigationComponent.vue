@@ -307,6 +307,7 @@ img {
   }
   .navigation-container {
     position: relative;
+    background-color: #353631;
   }
 
   .navigation-menu label {
