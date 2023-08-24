@@ -316,14 +316,17 @@ main {
 
 /* Media query for desktop layout */
 @media screen and (min-width: 770px) {
+  .brewery{
+    overflow: hidden;
+  }
   main {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
     gap: 60px;
     padding-left: 15px;
     padding-right: 15px;
-    max-width: 1200px;
-    width: max-content;
+    max-width: 100vw;
+    width: 95vw;
     justify-content: center;
   }
   .bottom-container {
@@ -336,13 +339,33 @@ main {
   .material-icons-outlined {
     font-size: 48px;
   }
-  @media screen and (max-width: 480px) {
   .carousel {
   display: flex;
   align-items: center;
   border-radius: 10px;
-  width:30rem;
+  width:60rem;
+}
+#btn-left,
+#btn-right {
+  color: transparent;
+   overflow:hidden;
 }
 }
+  @media screen and (max-width: 480px) {
+#btn-left,
+#btn-right {
+  color: transparent;
+}
+    .brewery{
+      overflow: hidden;
+    }
+.carousel {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  margin-left: -6rem;
+  width:40rem;
+}
+
 }
 </style>
